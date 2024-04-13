@@ -1,0 +1,403 @@
+package  srbn.Parser;
+
+import java_cup.runtime.*;
+import srbn.Domain.*;
+
+import java.util.ArrayList;
+import srbn.Domain.Components.*;
+
+class Parser;
+
+parser code{:
+
+    private ArrayList<ErrorP> errors = new ArrayList<>();
+    private ArrayList<Action> actions = new ArrayList<>();
+
+    public void syntax_error(Symbol token) {
+        if (token.sym != ParserSym.EOF){
+        System.out.println("sintax error: " +token.value + " en la línea " + token.right+ " en la columna " + token.left);
+            addError(token, "syntax_error");
+        }
+    }
+
+    public void unrecovered_syntax_error(Symbol token) {
+        System.out.println("unrec sintax error: " +token.value + " en la línea " + token.right+" en la columna " + token.left);
+        addError(token, "unrec error: ");
+    }
+
+    public void addError(Symbol token, String msj) {
+        try {
+            ArrayList<String> list = new ArrayList<>();
+            for (Integer ex : expected_token_ids()) {
+                list.add(ParserSym.terminalNames[ex]);
+            }
+            errors.add(new ErrorP(token.left, token.right, "Unexpected: ", 1, msj ));
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void addAction(Action act){
+        actions.add(act);
+    }
+
+    public ArrayList<Action> getActions(){
+        return actions;
+    }
+
+    public ArrayList<ErrorP> getErrors(){
+        return errors;
+    }
+
+    private int getTypeComp(String type){
+            switch(type.toUpperCase()){
+                case "TITTLE":
+                    return ComponentType.TITTLE.ordinal();
+                case "PARAGRAPH":
+                    return ComponentType.PARAGRAPH.ordinal();
+                case "IMAGE":
+                    return ComponentType.IMAGE.ordinal();
+                case "VIDEO":
+                    return ComponentType.VIDEO.ordinal();
+                case "MENU":
+                    return ComponentType.MENU.ordinal();
+                default:
+                    return 99;
+            }
+        }
+
+
+        private int getTypeAction(String type){
+            switch(type.toUpperCase()){
+                case "NEW_SITE":
+                    return ActionTypes.NEW_SITE.ordinal();
+                case "DELETE_SITE":
+                    return ActionTypes.DELETE_SITE.ordinal();
+                case "NEW_PAGE":
+                    return ActionTypes.NEW_PAGE.ordinal();
+                case "DELETE_PAGE":
+                    return ActionTypes.DELETE_PAGE.ordinal();
+                case "MODIFY_PAGE":
+                    return ActionTypes.MODIFY_PAGE.ordinal();
+                case "ADD_COMPONENT":
+                    return ActionTypes.ADD_COMPONENT.ordinal();
+                case "MODIFY_COMPONENT":
+                    return ActionTypes.MODIFY_COMPONENT.ordinal();
+                default:
+                    return 99;
+            }
+        }
+:}
+
+non terminal String  parentAttribute, sourceAttribute, colorAttribute, textAttribute, pageParam, modDateParam,
+                     userModParam, createDateParam, userCrtParam, parentParam, siteParam, tittleParam, idParam;
+
+non terminal Component   tittleCompDef, paragCompDef, imageCompDef, videoCompDef, menuCompDef, classParamDef;
+
+non terminal Action  newSiteActDef, deleteSiteActDef, newPageActDef, deletePageActDef, modifyPageActDef, addCompActDef,
+                     modifyCompActDef, defActionsDecl, opnActionDecl, actionDecl;
+
+non terminal Integer     alignmentLoc, widthAttribute, heightAttribute, alignmentAttribute;
+
+non terminal         xmlWebCreation, defActions, opnActions, clsActions,opnTags, clsTags, tagDef;
+
+terminal String      ID_VALUE, COLOR_VALUE, DATE_VALUE;
+
+terminal int         NUMBER_VALUE, CENTER_LOC, LEFT_LOC, RIGHT_LOC, JUSTIFY_LOC, HEIGHT, WIDTH;
+
+terminal             CLSQRBRCKT, OPENSQRBRCKT, DBLEQUOTES, MAYORQ,OPENLABELSTAG, OPENACTIONSTAG,
+                     CLOSEACTIONTAG, CLOSEPARAMTAG, CLOSELABELTAG, CLOSEVALUETAG, CLOSELABELSTAG,
+                     ACTION,  PARAM, NAME, OPENPARAMSTAG, OPENATTRIBUTESTAG, ATTRIBUTE,
+                     CLOSEATTRIBUTESTAG, CLOSEATTRIBUTETAG, openParams, CLOSEPARAMSTAG,CLOSEACTIONSTAG,
+                     NEW_SITE, DELETE_SITE, NEW_PAGE, DELETE_PAGE, MODIFY_PAGE, ADD_COMPONENT, MODIFY_COMPONENT,
+                     ID_PARAM, TITTLE, SITE, PAGE, CLASSTYPE, USER_CREATION, DATE_CREATION, USER_MODIFICATION, DATE_MODIFICATION,
+                     PARENT, PARAGRAPH, IMAGE, VIDEO, MENU, TEXT, ALIGNMENT, COLOR, SOURCE,
+                     MINORQ, DIAGONAL, ACTIONS;
+
+start with xmlWebCreation;
+
+
+
+xmlWebCreation ::=  actionDecl:newAction {: addAction(newAction);:}
+                |   ACTIONS defActionsDecl:actions CLOSEACTIONSTAG {: System.out.println("actions det");:}
+                ;
+
+defActionsDecl::=   actionDecl:newAction {: addAction(newAction);:}
+                |   defActionsDecl:_newAction actionDecl:newAction {: addAction(newAction);:}
+                ;
+
+actionDecl::=       ACTION NAME opnActionDecl:newAction CLOSEACTIONTAG {: RESULT = newAction;:}
+                |   error    {:  System.out.println("error encontrado actionDecl");:}
+                ;
+
+opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite;:}
+                |   deleteSiteActDef:actiondeleteSite {: RESULT = actiondeleteSite; :}
+                |   newPageActDef:actionnewPage {: RESULT = actionnewPage; :}
+                |   deletePageActDef:actiondeletePage {: RESULT = actiondeletePage; :}
+                |   modifyPageActDef:actionmodifyPage {: RESULT = actionmodifyPage; :}
+                |   addCompActDef:actionaddComp {: RESULT = actionaddComp; :}
+                |   modifyCompActDef:actionmodifyComp {: RESULT = actionmodifyComp;:}
+                |   error:err                           {:  System.out.println("error encontrado");:}
+                ;
+
+
+newSiteActDef::=    NEW_SITE:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:idP
+                    userCrtParam:userCrtP
+                    createDateParam:creationDateP
+                    modDateParam:modDateP
+                    userModParam:userModParam
+                    CLOSEPARAMSTAG                                                       {:
+                                                                                        Action act = new Action(idP.toString(), userCrtP.toString(),
+                                                                                            creationDateP.toString(), modDateP.toString(),
+                                                                                            userModParam.toString(), getTypeAction("NEW_SITE"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                ;
+
+deleteSiteActDef::= DELETE_SITE DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:idP
+                    CLOSEPARAMSTAG                                                       {:
+                                                                                        Action act = new Action(idP.toString(),
+                                                                                            getTypeAction("DELETE_SITE"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                    ;
+
+newPageActDef::=    NEW_PAGE:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:idP
+                    tittleParam:tittleP
+                    siteParam:siteP
+                    parentParam:parentP
+                    userCrtParam:userCrtP
+                    createDateParam:creationDateP
+                    userModParam:userModP
+                    modDateParam:modDatP
+                    CLOSEPARAMSTAG                                                       {:
+                                                                                        Action act = new Action(idP,
+                                                                                            tittleP, siteP, parentP, userCrtP, creationDateP, modDatP, userModP, getTypeAction("NEW_PAGE"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                | error CLOSEPARAMTAG
+                ;
+
+deletePageActDef::= DELETE_PAGE:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:id_value
+                    CLOSEPARAMSTAG                                                       {:
+                                                                                        Action act = new Action(id_value.toString(),
+                                                                                            getTypeAction("DELETE_PAGE"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                ;
+
+modifyPageActDef::= MODIFY_PAGE:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:id_value
+                    tittleParam:tittle_value
+                    CLOSEPARAMSTAG                                                       {:
+                                                                                        Action act = new Action(id_value,tittle_value,
+                                                                                            getTypeAction("MODIFY_PAGE"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                ;
+
+addCompActDef::=    ADD_COMPONENT DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:id_value
+                    pageParam:page_value
+                    PARAM NAME CLASSTYPE DBLEQUOTES MAYORQ
+                    classParamDef:comp                                                   {:
+                                                                                        comp.setId(id_value.toString());
+                                                                                        comp.setPage(page_value.toString());
+                                                                                        Action act = new Action(id_value,
+                                                                                            page_value, comp, getTypeAction("ADD_COMPONENT"));
+                                                                                        RESULT = act;
+                                                                                        :}
+                ;
+
+modifyCompActDef::= MODIFY_COMPONENT:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:id_value
+                    pageParam:page_value
+                    PARAM NAME CLASSTYPE DBLEQUOTES MAYORQ
+                    classParamDef:comp                                              {:
+
+                                                                                        comp.setId(id_value.toString());
+                                                                                        comp.setPage(page_value.toString());
+                                                                                        Action act = new Action(id_value,
+                                                                                            page_value, comp, getTypeAction(actionType.toString()));
+                                                                                        RESULT = act;
+                                                                                    :}
+                ;
+
+classParamDef::=    tittleCompDef:tittleComp                                        {: RESULT = tittleComp;:}
+                |   paragCompDef:paragComp                                          {: RESULT = paragComp; :}
+                |   imageCompDef:imageComp                                          {: RESULT = imageComp; :}
+                |   videoCompDef:videoComp                                          {: RESULT = videoComp; :}
+                |   menuCompDef:menuComp                                            {: RESULT = menuComp; :}
+                ;
+
+tittleCompDef::=
+                    TITTLE:tittle
+                    CLOSEPARAMTAG
+                    OPENATTRIBUTESTAG
+                    textAttribute:textAttribute
+                    alignmentAttribute:alignmentAttribute
+                    colorAttribute:colorAttribute
+                    CLOSEATTRIBUTESTAG                                                       {:
+                                                                                            TittleComponent tittleComp = new TittleComponent(getTypeComp("TITTLE"),
+                                                                                            textAttribute, colorAttribute, alignmentAttribute);
+                                                                                            RESULT = tittleComp;
+                                                                                        :}
+                ;
+
+paragCompDef::=
+                    PARAGRAPH:tittle
+                    CLOSEPARAMTAG
+                    OPENATTRIBUTESTAG
+                    textAttribute:textAttribute
+                    alignmentAttribute:alignmentAttribute
+                    colorAttribute:colorAttribute
+                    CLOSEATTRIBUTESTAG                                                       {:
+                                                                                            ParagraphComponent paragraphComp = new ParagraphComponent(getTypeComp("PARAGRAPH"),
+                                                                                            textAttribute.toString(), alignmentAttribute, colorAttribute);
+                                                                                            RESULT = paragraphComp;
+                                                                                        :}
+                ;
+
+imageCompDef::=
+                    IMAGE:image
+                    CLOSEPARAMTAG
+                    OPENATTRIBUTESTAG
+                    sourceAttribute:sourceAttribute
+                    alignmentAttribute:alignmentAttribute
+                    heightAttribute:heightAttribute
+                    widthAttribute:widthAttribute
+                    CLOSEATTRIBUTESTAG                                                       {:
+                                                                                            ImageComponent imageComp =  new ImageComponent(getTypeComp("IMAGE"),
+                                                                                            sourceAttribute.toString(), heightAttribute, widthAttribute, alignmentAttribute);
+                                                                                            RESULT = imageComp;
+                                                                                        :}
+                ;
+
+videoCompDef::=
+                    VIDEO:video
+                    CLOSEPARAMTAG
+                    OPENATTRIBUTESTAG
+                    sourceAttribute:sourceAttribute
+                    alignmentAttribute:alignmentAttribute
+                    heightAttribute:heightAttribute
+                    widthAttribute:widthAttribute
+                    CLOSEATTRIBUTESTAG
+                                                                                        {:
+                                                                                            VideoComponent videoComp = new VideoComponent(getTypeComp("VIDEO"),
+                                                                                                sourceAttribute.toString(), heightAttribute, widthAttribute);
+                                                                                            RESULT = videoComp;
+                                                                                        :}
+                ;
+
+menuCompDef::=
+                    MENU:menu
+                    CLOSEPARAMTAG
+                    OPENATTRIBUTESTAG
+                    parentAttribute:parentAttribute
+                    CLOSEATTRIBUTESTAG
+                    clsTags                                                             {:
+                                                                                            MenuComponent menuComp = new MenuComponent(parentAttribute,
+                                                                                                getTypeComp("MENU"));
+                                                                                            RESULT = menuComp;
+                                                                                        :}
+                ;
+
+
+idParam::=          PARAM NAME ID_PARAM DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString());:}
+                ;
+
+tittleParam::=      PARAM NAME TITTLE DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString());:}
+                ;
+
+siteParam::=        PARAM NAME  SITE DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString()); :}
+                ;
+
+parentParam::=      PARAM NAME PARENT DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString()); :}
+                ;
+
+userCrtParam::=     PARAM NAME  USER_CREATION DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString());:}
+                ;
+
+createDateParam::=  PARAM NAME DATE_CREATION DBLEQUOTES MAYORQ
+                    DATE_VALUE:date_value
+                    CLOSEPARAMTAG                                                            {:RESULT= date_value.toString(); System.out.println(date_value.toString());:}
+                ;
+
+userModParam::=     PARAM NAME USER_MODIFICATION DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString());:}
+                ;
+
+modDateParam::=     PARAM NAME DATE_MODIFICATION DBLEQUOTES MAYORQ
+                    DATE_VALUE:date_value
+                    CLOSEPARAMTAG                                                            {:RESULT= date_value.toString(); System.out.println(date_value.toString());:}
+                ;
+
+pageParam::=        PARAM NAME PAGE DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString(); System.out.println(id_value.toString());:}
+                ;
+
+textAttribute::=    ATTRIBUTE NAME TEXT DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString(); System.out.println(id_value.toString());:}
+                ;
+
+alignmentAttribute::=ATTRIBUTE NAME ALIGNMENT DBLEQUOTES MAYORQ
+                    alignmentLoc:alignment_loc
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= alignment_loc;:}
+                ;
+
+colorAttribute::=   ATTRIBUTE NAME COLOR DBLEQUOTES MAYORQ
+                    COLOR_VALUE:id_value
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value;:}
+                ;
+
+sourceAttribute::=  ATTRIBUTE NAME SOURCE DBLEQUOTES MAYORQ
+                    DBLEQUOTES
+                    ID_VALUE:id_value
+                    DBLEQUOTES
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString();:}
+                ;
+
+heightAttribute::=  ATTRIBUTE NAME HEIGHT DBLEQUOTES MAYORQ
+                    NUMBER_VALUE:num_value
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= num_value;:}
+                ;
+
+widthAttribute::=   ATTRIBUTE NAME WIDTH DBLEQUOTES MAYORQ
+                    NUMBER_VALUE:num_value
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= num_value;:}
+                ;
+
+parentAttribute::=  ATTRIBUTE NAME PARENT DBLEQUOTES MAYORQ
+                    ID_VALUE:id_value
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString();:}
+                ;
+
+alignmentLoc::=     CENTER_LOC:center_loc                                               {:RESULT= 1; :}
+                |   LEFT_LOC:left_loc                                                   {:RESULT= 2; :}
+                |   RIGHT_LOC:right_loc                                                 {:RESULT= 3; :}
+                |   JUSTIFY_LOC:justify_loc                                             {:RESULT= 4; :}
+                ;

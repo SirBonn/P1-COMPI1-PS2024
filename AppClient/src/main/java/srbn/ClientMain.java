@@ -1,7 +1,10 @@
 package srbn;
 
+import srbn.GUI.ClientViewGUI;
+
 public class Main {
+
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        new ClientViewGUI().setVisible(true);
     }
 }
