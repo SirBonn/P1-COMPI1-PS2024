@@ -18,7 +18,7 @@ public class ClientViewGUI extends javax.swing.JFrame {
     ServerConnection sc;
     public ClientViewGUI() {
         initComponents();
-        sc = new ServerConnection(inputTextArea);
+        sc = new ServerConnection(inputTextArea, outputTextArea);
     }
 
     /**

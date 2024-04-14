@@ -8,27 +8,32 @@ import java.net.Socket;
 public class ServerConnection {
 
     private JTextArea console;
+    private JTextArea outputTextArea;
 
-    public ServerConnection(JTextArea console) {
+    public ServerConnection(JTextArea console, JTextArea outputTextArea) {
         this.console = console;
+        this.outputTextArea = outputTextArea;
     }
 
-    public String CreateSocket() {
+    public void CreateSocket() {
         String response = "NO HAY RESPUESTA";
 
         try {
+            this.outputTextArea.setText("");
+
             Socket socket = new Socket("127.0.0.1", 80);
             ClientConnectionManager sm = new ClientConnectionManager(socket.getInputStream(), socket.getOutputStream());
 
             sm.sendString(this.console.getText());
+            response = "Conexión establecida\n";
+            response += sm.receiveString();
+            outputTextArea.append(response + "\n");
 
-            response = "Conexión establecida";
 
         } catch (Exception e) {
-            console.append("ERROR -> No hay respuesta del servidor\n");
+            outputTextArea.append("ERROR -> No hay respuesta del servidor\n");
         }
 
-        return response;
     }
 
 }

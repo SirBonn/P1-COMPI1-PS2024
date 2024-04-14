@@ -39,4 +39,22 @@ public class ClientConnectionManager {
     }
 
 
+    public String receiveString() {
+        String response = "NO HAY RESPUESTA";
+        try {
+            int messageLength = this.inputStream.readInt();
+
+            // Leer la cadena como bytes
+            byte[] messageBytes = new byte[messageLength];
+            this.inputStream.readFully(messageBytes);
+
+            response = new String(messageBytes);
+
+        } catch (Exception e) {
+            System.out.println("Error al recibir el mensaje: " + e.getMessage());
+        }
+
+        return response;
+    }
+
 }
