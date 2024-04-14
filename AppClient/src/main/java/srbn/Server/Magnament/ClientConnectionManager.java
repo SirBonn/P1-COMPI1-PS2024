@@ -1,5 +1,5 @@
 
-package srbn.Server.Magnament.ClientConnection;
+package srbn.Server.Magnament;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

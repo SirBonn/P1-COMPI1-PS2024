@@ -1,6 +1,6 @@
 package srbn.Server.Connection;
 
-import srbn.Server.Magnament.ClientConnection.ClientConnectionManager;
+import srbn.Server.Magnament.ClientConnectionManager;
 
 import javax.swing.*;
 import java.net.Socket;
