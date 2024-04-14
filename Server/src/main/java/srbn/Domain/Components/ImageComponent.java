@@ -7,12 +7,12 @@ public class ImageComponent extends Component{
     private int width;
     private int justify;
 
-    public ImageComponent (int type, String src, int height, int width, int justify) {
+    public ImageComponent (int type, String src, String height, String width, String justify) {
         super("", "", type);
         this.src = src;
-        this.height = height;
-        this.width = width;
-        this.justify = justify;
+        this.height = Integer.parseInt(height);
+        this.width = Integer.parseInt(width);
+        this.justify = Integer.parseInt(justify);
     }
 
     public String getSrc() {

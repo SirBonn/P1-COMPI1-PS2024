@@ -6,10 +6,10 @@ public class ParagraphComponent extends Component{
     private int align;
     private String color;
 
-    public ParagraphComponent(int type, String text, int align, String color) {
+    public ParagraphComponent(int type, String text, String align, String color) {
         super("", "", type);
         this.text = text;
-        this.align = align;
+        this.align = Integer.parseInt(align);
         this.color = color;
     }
 

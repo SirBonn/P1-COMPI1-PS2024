@@ -7,11 +7,11 @@ public class TittleComponent extends Component {
     private String color;
     private int align;
 
-    public TittleComponent(int type, String text, String color, int align) {
+    public TittleComponent(int type, String text, String color, String align) {
         super("", "", type);
         this.text = text;
         this.color = color;
-        this.align = align;
+        this.align = Integer.parseInt(align);
     }
 
     public String getText() {

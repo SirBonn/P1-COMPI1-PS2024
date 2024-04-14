@@ -2,20 +2,23 @@ package srbn.Domain;
 
 import srbn.Domain.Components.Component;
 
+import java.util.ArrayList;
+
 
 public class Action {
 
-    private String id;
-    private String tittle;
-    private String site;
-    private String parent;
-    private String userCreation;
-    private String creationDate;
-    private String userModification;
-    private String modificationDate;
-    private String page;
-    private String clase;
-    private int actionType;
+    private String id = "";
+    private String tittle = "";
+    private String site = "";
+    private String parent= "";
+    private String userCreation = "";
+    private String creationDate = "";
+    private String userModification = "";
+    private String modificationDate = "";
+    private String page = "";
+    private String clase = "";
+    private int actionType = 99;
+    private ArrayList<Label> labels;
     private Component component;
 
 
@@ -33,6 +36,7 @@ public class Action {
         this.clase = clase;
         this.actionType = actionType;
         component = null;
+        labels = null;
     }
 
     public Action(String id, int actionType) {
@@ -92,6 +96,14 @@ public class Action {
 
     public String getId() {
         return id;
+    }
+
+    public ArrayList<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(ArrayList<Label> labels) {
+        this.labels = labels;
     }
 
     public void setId(String id) {

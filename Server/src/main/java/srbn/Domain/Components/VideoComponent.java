@@ -6,11 +6,11 @@ public class VideoComponent extends Component{
     private int height;
     private int width;
 
-    public VideoComponent(int type, String src, int height, int width) {
+    public VideoComponent(int type, String src, String height, String width) {
         super("", "", type);
         this.src = src;
-        this.height = height;
-        this.width = width;
+        this.height = Integer.parseInt(height);
+        this.width = Integer.parseInt(width);
     }
 
     public String getSrc() {
