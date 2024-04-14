@@ -249,8 +249,7 @@ classParamDef::=    tittleCompDef:tittleComp                                    
                 |   menuCompDef:menuComp                                            {: RESULT = menuComp; :}
                 ;
 
-tittleCompDef::=
-                    TITTLE:tittle
+tittleCompDef::=    TITTLE:tittle
                     CLOSEPARAMTAG
                     CLOSEPARAMSTAG
                     OPENATTRIBUTESTAG
@@ -410,10 +409,10 @@ parentAttribute::=  ATTRIBUTE NAME PARENT DBLEQUOTES MAYORQ
                     CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString();:}
                 ;
 
-alignmentLoc::=     CENTER_LOC:center_loc                                                   {:RESULT= "1"; :}
-                |   LEFT_LOC:left_loc                                                       {:RESULT= "2"; :}
-                |   RIGHT_LOC:right_loc                                                     {:RESULT= "3"; :}
-                |   JUSTIFY_LOC:justify_loc                                                 {:RESULT= "4"; :}
+alignmentLoc::=       CENTER_LOC:center_loc                            {:RESULT= "1"; :}
+                |     LEFT_LOC:left_loc                                {:RESULT= "2"; :}
+                |     RIGHT_LOC:right_loc                              {:RESULT= "3"; :}
+                |     JUSTIFY_LOC:justify_loc                          {:RESULT= "4"; :}
                 ;
 
 addLabels::=        OPENLABELSTAG labelDecl:labels CLOSELABELSTAG                           {:RESULT = labels;:}

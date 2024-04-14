@@ -47,7 +47,11 @@ CLOSEATTRIBUTETAG = "</atributo>"
 CLOSEATTRIBUTESTAG = "</atributos>"
 CLOSEPARAMSTAG = "</parametros>"
 CLOSEACTIONSTAG = "</acciones>"
-
+TITULOID = "[TITULO]" | "TITULO"
+CENTER_LOC = "[CENTRAR]"
+LEFT_LOC = "[IZQUIERDA]"
+RIGHT_LOC = "[DERECHA]"
+JUSTIFY_LOC = "[JUSTIFICAR]"
 ID = ("["[^\"\n\r]*"]")
 TAGID = (\"[^\"\n\r]*\")
 DBLEQUOTES  = "\""
@@ -57,8 +61,8 @@ MAYORQ      = ">"
 DIAGONAL    = "/"
 CLSQRBRCKT  = "]"
 OPNSQRBRCKT = "["
-DATE        = \"[0-9]{4}-[0-9]{2}-[0-9]{2}\"
-HEXCODE     = ("#"[0-9a-fA-F]{6})
+DATE        = ("["[0-9]{4}-[0-9]{2}-[0-9]{2}"]")
+HEXCODE     = ("[#"[0-9a-fA-F]{6}"]")
 
 %{
     StringBuffer sb = new StringBuffer();
@@ -104,15 +108,11 @@ HEXCODE     = ("#"[0-9a-fA-F]{6})
 
 
 //reservadas
-(<acciones>)                       {return symbol(ParserSym.ACTIONS, yytext());}
-//(parametros)                     {return symbol(ParserSym.PARAMS, yytext());}
+(<acciones>)                      {return symbol(ParserSym.ACTIONS, yytext());}
 (<parametro)                      {return symbol(ParserSym.PARAM, yytext());}
-(nombre=\")                        {return symbol(ParserSym.NAME, yytext());}
+(nombre=\")                       {return symbol(ParserSym.NAME, yytext());}
 (<etiqueta)                       {return symbol(ParserSym.OPENLABELTAG, yytext());}
-//(etiquetas)                      {return symbol(ParserSym.LABELS, yytext());}
-//(atributos)                      {return symbol(ParserSym.ATTRIBUTES, yytext());}
 (<atributo)                       {return symbol(ParserSym.ATTRIBUTE, yytext());}
-//(valor)                          {return symbol(ParserSym.VALUE, yytext());}
 (<accion)                         {return symbol(ParserSym.ACTION, yytext());}
 
 //tipos de acciones
@@ -121,11 +121,11 @@ HEXCODE     = ("#"[0-9a-fA-F]{6})
 (NUEVA_PAGINA)                   {return symbol(ParserSym.NEW_PAGE, yytext());}
 (BORRAR_PAGINA)                  {return symbol(ParserSym.DELETE_PAGE, yytext());}
 (MODIFICAR_PAGINA)               {return symbol(ParserSym.MODIFY_PAGE, yytext());}
-(AGREGAR_COMPONENTE)            {return symbol(ParserSym.ADD_COMPONENT, yytext());}
+(AGREGAR_COMPONENTE)             {return symbol(ParserSym.ADD_COMPONENT, yytext());}
 (MODIFICAR_COMPONENTE)           {return symbol(ParserSym.MODIFY_COMPONENT, yytext());}
 //tipos de paramteros
 (ID)                             {return symbol(ParserSym.ID_PARAM, yytext());}
-(TITULO)                         {return symbol(ParserSym.TITTLE, yytext());}
+{TITULOID}                         {return symbol(ParserSym.TITTLE, yytext());}
 (SITIO)                          {return symbol(ParserSym.SITE, yytext());}
 (PAGINA)                         {return symbol(ParserSym.PAGE, yytext());}
 (CLASE)                          {return symbol(ParserSym.CLASSTYPE, yytext());}
@@ -147,10 +147,10 @@ HEXCODE     = ("#"[0-9a-fA-F]{6})
 (ALTURA)                         {return symbol(ParserSym.HEIGHT, yytext());}
 (ANCHO)                          {return symbol(ParserSym.WIDTH, yytext());}
 //ALINEACIONES
-(CENTRAR)                        {return symbol(ParserSym.CENTER_LOC, yytext());}
-(IZQUIERDA)                      {return symbol(ParserSym.LEFT_LOC, yytext());}
-(DERECHA)                        {return symbol(ParserSym.RIGHT_LOC, yytext());}
-(JUSTIFICAR)                     {return symbol(ParserSym.JUSTIFY_LOC, yytext());}
+{CENTER_LOC}                     {return symbol(ParserSym.CENTER_LOC, yytext());}
+{LEFT_LOC}                       {return symbol(ParserSym.LEFT_LOC, yytext());}
+{RIGHT_LOC}                      {return symbol(ParserSym.RIGHT_LOC, yytext());}
+{JUSTIFY_LOC}                    {return symbol(ParserSym.JUSTIFY_LOC, yytext());}
 
 
 {HEXCODE}                        {return symbol(ParserSym.COLOR_VALUE, yytext());}
@@ -163,7 +163,7 @@ HEXCODE     = ("#"[0-9a-fA-F]{6})
 {CLSQRBRCKT}                     {return symbol(ParserSym.CLSQRBRCKT, yytext());}
 {OPNSQRBRCKT}                    {return symbol(ParserSym.OPENSQRBRCKT, yytext());}
 {DIGIT}+                         {return symbol(ParserSym.NUMBER_VALUE,yytext());}
-{TAGID}                         {return symbol(ParserSym.TAGID, yytext());}
+{TAGID}                          {return symbol(ParserSym.TAGID, yytext());}
 {ID}                             {return symbol(ParserSym.ID_VALUE, yytext());}
 {WHITESPCS}                      {/*Ignore*/}
 [^]                              {addError(yytext());}

@@ -2,7 +2,6 @@
 package srbn.GUI;
 
 import srbn.Server.Connection.ServerConnection;
-import srbn.Server.Magnament.ClientConnectionManager;
 
 /**
  *
