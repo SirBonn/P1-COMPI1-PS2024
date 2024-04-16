@@ -1,27 +1,43 @@
 package srbn.Managment.Folders;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
 
 public class FolderManagment {
 
-    private final String apacheSv = "SetupSv/ApacheSv";
-    private final String sitesSv = "SetupSv/SitesSv";
+    public static final String APACHE_SV_FOLD = "SetupSv/ApacheSv";
+    public static final String SITES_SV_FOLD = "SetupSv/SitesSv";
+    public static final String ACTIONS_FOLD = "SetupSv/ActionsSv";
+
 
     public FolderManagment() {
     }
 
     public void setup() {
-        File dir = new File("tmp/");
+        File dir = new File("SetupSv/");
         if (dir.exists()) {
             System.out.println("folder already exists");
+        } else {
+
+            dir = new File(APACHE_SV_FOLD);
+            dir.mkdirs();
+            dir = new File(SITES_SV_FOLD);
+            dir.mkdirs();
+            dir = new File(ACTIONS_FOLD);
+            dir.mkdirs();
+        }
+    }
+
+
+    public static String createSiteFolder(String siteName) {
+        File dir = new File(SITES_SV_FOLD + "/" + siteName);
+        if (dir.exists()) {
+            System.out.println("folder already exists");
+        } else {
+            dir.mkdirs();
         }
 
-        dir = new File(apacheSv);
-        dir.mkdirs();
-        dir = new File(sitesSv);
-        dir.mkdirs();
+        return SITES_SV_FOLD + "/" + siteName;
     }
+
 
 }

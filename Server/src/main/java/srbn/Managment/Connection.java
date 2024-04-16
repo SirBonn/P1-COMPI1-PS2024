@@ -9,8 +9,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import srbn.Domain.Action;
+import srbn.Domain.Components.ActionManager;
 import srbn.Domain.ErrorP;
 import srbn.Lexer.Lexer;
+import srbn.Managment.Folders.DocumentManager;
 import srbn.Parser.Parser;
 
 public class Connection extends Thread {
@@ -50,10 +52,11 @@ public class Connection extends Thread {
                     Parser sintax = new Parser(lex);
                     /*Query query = (Query) */
                     sintax.parse();
-
                     String response = getResponse(sintax.getActions(), sintax.getErrors());
                     outputStream.writeInt(response.length());
-
+                    if (sintax.isRight()) {
+                        new ActionManager(sintax.getActions()).executeActions();
+                    }
                     // Enviar la cadena como bytes
                     outputStream.writeBytes(response);
 
@@ -73,20 +76,20 @@ public class Connection extends Thread {
 
     }
 
-    public String getResponse(ArrayList<Action> actions, ArrayList<ErrorP> errors){
+    public String getResponse(ArrayList<Action> actions, ArrayList<ErrorP> errors) {
         String Result = "";
 
 
-            for(Action action: actions){
-                if (action != null)
-                Result += action.getId()+ ": Registrado\n";
-            }
+        for (Action action : actions) {
+            if (action != null)
+                Result += action.getId() + ": Registrado\n";
+        }
 
-            Result += "Errors: \n";
-            for(ErrorP error: errors){
-                if(error != null)
+        Result += "Errors: \n";
+        for (ErrorP error : errors) {
+            if (error != null)
                 Result += error.toString() + "\n";
-            }
+        }
         return Result;
     }
 

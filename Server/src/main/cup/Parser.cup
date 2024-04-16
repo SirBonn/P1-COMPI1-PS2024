@@ -12,7 +12,6 @@ parser code{:
 
     private ArrayList<ErrorP> errors = new ArrayList<>();
     private ArrayList<Action> actions = new ArrayList<>();
-    private String message = "";
 
     public void syntax_error(Symbol token) {
         if (token.sym != ParserSym.EOF){
@@ -25,6 +24,11 @@ parser code{:
         //System.out.println("unrec sintax error: " +token.value + " en la línea " + token.right+" en la columna " + token.left);
         addError(token, "unrec error: ");
     }
+
+    private String removeBrckt(String str){
+        return str.replace("[", "").replace("]", "");
+    }
+
 
     public void addError(Symbol token, String msj) {
         try {
@@ -48,6 +52,10 @@ parser code{:
 
     public ArrayList<ErrorP> getErrors(){
         return errors;
+    }
+
+    public boolean isRight(){
+        return errors.isEmpty();
     }
 
     private int getTypeComp(String type){
@@ -132,7 +140,7 @@ defActionsDecl::=   actionDecl:newAction {: addAction(newAction);:}
                 ;
 
 actionDecl::=       ACTION NAME opnActionDecl:newAction CLOSEACTIONTAG {: RESULT = newAction;:}
-                |   error    {:message = "ERROR EN DECLARACION DE ACCION";:}
+                |   error    {::}
                 ;
 
 opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite; System.out.println("new Site act");:}
@@ -142,7 +150,7 @@ opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite; Syste
                 |   modifyPageActDef:actionmodifyPage {: RESULT = actionmodifyPage; System.out.println("mod Page act"); :}
                 |   addCompActDef:actionaddComp {: RESULT = actionaddComp; System.out.println("add comp act");:}
                 |   modifyCompActDef:actionmodifyComp {: RESULT = actionmodifyComp; System.out.println("mod comp act"); :}
-                |   error:err                           {: message = "ERROR EN DECLARACION DE ACCION";:}
+                |   error:err                           {: :}
                 ;
 
 
@@ -156,7 +164,7 @@ newSiteActDef::=    NEW_SITE:actionType DBLEQUOTES MAYORQ
                     CLOSEPARAMSTAG                                                  {:
                                                                                         Action act = new Action(idP.toString(), userCrtP.toString(),
                                                                                             creationDateP.toString(), modDateP.toString(),
-                                                                                            userModParam.toString(), getTypeAction("NEW_SITE"));
+                                                                                            userModParam.toString(), ActionTypes.NEW_SITE.ordinal());
                                                                                         RESULT = act;
                                                                                     :}
                 ;
@@ -329,52 +337,52 @@ menuCompDef::=
 
 idParam::=          PARAM NAME ID_PARAM DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 tittleParam::=      PARAM NAME TITTLE DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 siteParam::=        PARAM NAME  SITE DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 parentParam::=      PARAM NAME PARENT DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 userCrtParam::=     PARAM NAME  USER_CREATION DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 createDateParam::=  PARAM NAME DATE_CREATION DBLEQUOTES MAYORQ
                     DATE_VALUE:date_value
-                    CLOSEPARAMTAG                                                            {:RESULT= date_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(date_value);:}
                 ;
 
 userModParam::=     PARAM NAME USER_MODIFICATION DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 modDateParam::=     PARAM NAME DATE_MODIFICATION DBLEQUOTES MAYORQ
                     DATE_VALUE:date_value
-                    CLOSEPARAMTAG                                                            {:RESULT= date_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(date_value);:}
                 ;
 
 pageParam::=        PARAM NAME PAGE DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEPARAMTAG                                                            {:RESULT= id_value.toString();:}
+                    CLOSEPARAMTAG                                                            {:RESULT= removeBrckt(id_value);:}
                 ;
 
 textAttribute::=    ATTRIBUTE NAME TEXT DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString();:}
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(id_value);:}
                 ;
 
 alignmentAttribute::=ATTRIBUTE NAME ALIGNMENT DBLEQUOTES MAYORQ
@@ -384,29 +392,29 @@ alignmentAttribute::=ATTRIBUTE NAME ALIGNMENT DBLEQUOTES MAYORQ
 
 colorAttribute::=   ATTRIBUTE NAME COLOR DBLEQUOTES MAYORQ
                     COLOR_VALUE:id_value
-                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value;:}
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(id_value);:}
                 ;
 
 sourceAttribute::=  ATTRIBUTE NAME SOURCE DBLEQUOTES MAYORQ
                     DBLEQUOTES
                     ID_VALUE:id_value
                     DBLEQUOTES
-                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString();:}
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(id_value);:}
                 ;
 
 heightAttribute::=  ATTRIBUTE NAME HEIGHT DBLEQUOTES MAYORQ
                     NUMBER_VALUE:num_value
-                    CLOSEATTRIBUTETAG                                                        {:RESULT= num_value;:}
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(num_value);:}
                 ;
 
 widthAttribute::=   ATTRIBUTE NAME WIDTH DBLEQUOTES MAYORQ
                     NUMBER_VALUE:num_value
-                    CLOSEATTRIBUTETAG                                                        {:RESULT= num_value;:}
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(num_value);:}
                 ;
 
 parentAttribute::=  ATTRIBUTE NAME PARENT DBLEQUOTES MAYORQ
                     ID_VALUE:id_value
-                    CLOSEATTRIBUTETAG                                                        {:RESULT= id_value.toString();:}
+                    CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(id_value);:}
                 ;
 
 alignmentLoc::=       CENTER_LOC:center_loc                            {:RESULT= "1"; :}
