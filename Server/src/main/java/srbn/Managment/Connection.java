@@ -1,5 +1,11 @@
 package srbn.Managment;
 
+import srbn.Domain.Action;
+import srbn.Domain.ActionManager;
+import srbn.Domain.ErrorP;
+import srbn.Lexer.Lexer;
+import srbn.Parser.Parser;
+
 import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,13 +13,6 @@ import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import srbn.Domain.Action;
-import srbn.Domain.Components.ActionManager;
-import srbn.Domain.ErrorP;
-import srbn.Lexer.Lexer;
-import srbn.Managment.Folders.DocumentManager;
-import srbn.Parser.Parser;
 
 public class Connection extends Thread {
 
@@ -55,7 +54,7 @@ public class Connection extends Thread {
                     String response = getResponse(sintax.getActions(), sintax.getErrors());
                     outputStream.writeInt(response.length());
                     if (sintax.isRight()) {
-                        new ActionManager(sintax.getActions()).executeActions();
+                        new ActionManager(sintax.getActions(), response).executeActions();
                     }
                     // Enviar la cadena como bytes
                     outputStream.writeBytes(response);
@@ -63,6 +62,7 @@ public class Connection extends Thread {
                     System.out.println("yup[");
                 } catch (Exception e) {
                     System.out.println("ErrorP: " + e.getMessage());
+                    inputTextArea.append("ErrorP: " + e.getMessage() + "\n");
                     e.printStackTrace();
                 } finally {
                     System.out.println("Connection closed");
@@ -82,6 +82,9 @@ public class Connection extends Thread {
 
         for (Action action : actions) {
             if (action != null)
+                if(action.getId() == null | action.getId() == ""){
+                    Result += action.getPage() + ": Borrada\n";
+                }
                 Result += action.getId() + ": Registrado\n";
         }
 

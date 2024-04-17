@@ -12,7 +12,7 @@ public class ImageComponent extends Component{
         this.src = src;
         this.height = Integer.parseInt(height);
         this.width = Integer.parseInt(width);
-        this.justify = Integer.parseInt(justify);
+        this.justify = setJustify(justify);
     }
 
     public String getSrc() {
@@ -27,8 +27,28 @@ public class ImageComponent extends Component{
         return height;
     }
 
-    public int getJustify() {
-        return justify;
+    public int setJustify(String justify) {
+        if(justify.equals("left")){
+            return 0;
+        }else if(justify.equals("center")){
+            return 1;
+        } else if(justify.equals("right")){
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    public String getJustify() {
+        if(justify == 0){
+            return "left";
+        }else if(justify == 1){
+            return "center";
+        } else if(justify == 2){
+            return "right";
+        } else {
+            return "justify";
+        }
     }
 
     @Override

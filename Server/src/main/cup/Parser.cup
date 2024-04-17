@@ -164,7 +164,7 @@ newSiteActDef::=    NEW_SITE:actionType DBLEQUOTES MAYORQ
                     CLOSEPARAMSTAG                                                  {:
                                                                                         Action act = new Action(idP.toString(), userCrtP.toString(),
                                                                                             creationDateP.toString(), modDateP.toString(),
-                                                                                            userModParam.toString(), ActionTypes.NEW_SITE.ordinal());
+                                                                                            userModParam.toString(), getTypeAction("NEW_SITE"));
                                                                                         RESULT = act;
                                                                                     :}
                 ;
@@ -227,7 +227,7 @@ addCompActDef::=    ADD_COMPONENT DBLEQUOTES MAYORQ
                     pageParam:page_value
                     PARAM NAME CLASSTYPE DBLEQUOTES MAYORQ
                     classParamDef:comp                                              {:
-                                                                                        comp.setId(id_value.toString());
+                                                                                        comp.setIdComp(id_value.toString());
                                                                                         comp.setPage(page_value.toString());
                                                                                         Action act = new Action(id_value,
                                                                                             page_value, comp, getTypeAction("ADD_COMPONENT"));
@@ -242,7 +242,7 @@ modifyCompActDef::= MODIFY_COMPONENT:actionType DBLEQUOTES MAYORQ
                     PARAM NAME CLASSTYPE DBLEQUOTES MAYORQ
                     classParamDef:comp                                              {:
 
-                                                                                        comp.setId(id_value.toString());
+                                                                                        comp.setIdComp(id_value.toString());
                                                                                         comp.setPage(page_value.toString());
                                                                                         Action act = new Action(id_value,
                                                                                             page_value, comp, getTypeAction(actionType.toString()));
@@ -327,11 +327,11 @@ menuCompDef::=
                     OPENATTRIBUTESTAG
                     parentAttribute:parentAttribute
                     CLOSEATTRIBUTESTAG
-                    clsTags                                                             {:
-                                                                                          MenuComponent menuComp = new MenuComponent(parentAttribute,
-                                                                                            getTypeComp("MENU"));
-                                                                                          RESULT = menuComp;
-                                                                                        :}
+                    clsTags                                                                 {:
+                                                                                              MenuComponent menuComp = new MenuComponent(parentAttribute,
+                                                                                                getTypeComp("MENU"));
+                                                                                              RESULT = menuComp;
+                                                                                            :}
                 ;
 
 
@@ -396,9 +396,7 @@ colorAttribute::=   ATTRIBUTE NAME COLOR DBLEQUOTES MAYORQ
                 ;
 
 sourceAttribute::=  ATTRIBUTE NAME SOURCE DBLEQUOTES MAYORQ
-                    DBLEQUOTES
-                    ID_VALUE:id_value
-                    DBLEQUOTES
+                    TAGID:id_value
                     CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(id_value);:}
                 ;
 
@@ -417,10 +415,10 @@ parentAttribute::=  ATTRIBUTE NAME PARENT DBLEQUOTES MAYORQ
                     CLOSEATTRIBUTETAG                                                        {:RESULT= removeBrckt(id_value);:}
                 ;
 
-alignmentLoc::=       CENTER_LOC:center_loc                            {:RESULT= "1"; :}
-                |     LEFT_LOC:left_loc                                {:RESULT= "2"; :}
-                |     RIGHT_LOC:right_loc                              {:RESULT= "3"; :}
-                |     JUSTIFY_LOC:justify_loc                          {:RESULT= "4"; :}
+alignmentLoc::=       CENTER_LOC:center_loc                                                  {:RESULT= "1"; :}
+                |     LEFT_LOC:left_loc                                                      {:RESULT= "0"; :}
+                |     RIGHT_LOC:right_loc                                                    {:RESULT= "2"; :}
+                |     JUSTIFY_LOC:justify_loc                                                {:RESULT= "3"; :}
                 ;
 
 addLabels::=        OPENLABELSTAG labelDecl:labels CLOSELABELSTAG                           {:RESULT = labels;:}

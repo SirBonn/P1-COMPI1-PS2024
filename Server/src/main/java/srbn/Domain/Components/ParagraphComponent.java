@@ -3,13 +3,13 @@ package srbn.Domain.Components;
 public class ParagraphComponent extends Component{
 
     private String text;
-    private int align;
+    private int justify;
     private String color;
 
     public ParagraphComponent(int type, String text, String align, String color) {
         super("", "", type);
         this.text = text;
-        this.align = Integer.parseInt(align);
+        this.justify = setJustify(align);
         this.color = color;
     }
 
@@ -17,8 +17,29 @@ public class ParagraphComponent extends Component{
         return text;
     }
 
-    public int getAlign() {
-        return align;
+
+    public int setJustify(String justify) {
+        if(justify.equals("left")){
+            return 0;
+        }else if(justify.equals("center")){
+            return 1;
+        } else if(justify.equals("right")){
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    public String getJustify() {
+        if(justify == 0){
+            return "left";
+        }else if(justify == 1){
+            return "center";
+        } else if(justify == 2){
+            return "right";
+        } else {
+            return "justify";
+        }
     }
 
     public String getColor() {
@@ -29,7 +50,7 @@ public class ParagraphComponent extends Component{
     public String toString() {
         return "ParagraphComponent{" +
                 "text='" + text + '\'' +
-                ", align=" + align +
+                ", align=" + justify +
                 ", color='" + color + '\'' +
                 '}';
     }

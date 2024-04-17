@@ -10,7 +10,7 @@ public class Action {
     private String id = "";
     private String tittle = "";
     private String site = "";
-    private String parent= "";
+    private String parent = "";
     private String userCreation = "";
     private String creationDate = "";
     private String userModification = "";
@@ -19,7 +19,7 @@ public class Action {
     private String clase = "";
     private int actionType = 99;
     private ArrayList<Label> labels;
-    private Component component;
+    private ArrayList<Component> components;
 
 
     public Action(String id, String tittle, String site, String parent, String userCreation, String creationDate,
@@ -35,16 +35,16 @@ public class Action {
         this.page = page;
         this.clase = clase;
         this.actionType = actionType;
-        component = null;
+        components = null;
         labels = null;
     }
 
     public Action(String id, int actionType) {
-        this.id = id;
+        this.page = id;
         this.actionType = actionType;
     }
 
-    public Action (String id, String userCreation, String creationDate, String userModification, String modificationDate, int actionType){
+    public Action(String id, String userCreation, String creationDate, String userModification, String modificationDate, int actionType) {
         this.id = id;
         this.userCreation = userCreation;
         this.creationDate = creationDate;
@@ -57,7 +57,7 @@ public class Action {
         this.id = id;
         this.tittle = tittle;
         this.actionType = actionType;
-        component = null;
+        components = null;
     }
 
     public Action() {
@@ -71,15 +71,32 @@ public class Action {
         this.modificationDate = "";
         this.page = "";
         this.clase = "";
-        actionType = 99;
-        component = null;
+        this.actionType = 99;
+        components = null;
     }
 
     public Action(String id, String page, Component component, int actionType) {
         this.id = id;
         this.page = page;
-        this.component = component;
+        this.components = new ArrayList<>();
+        this.components.add(component);
         this.actionType = actionType;
+    }
+
+    public Action(String id, String tittle, String site, String parent, String userCreation, String creationDate, String userModification, String modificationDate, String page, String clase, int actionType, ArrayList<Label> labels, ArrayList<Component> components) {
+        this.id = id;
+        this.tittle = tittle;
+        this.site = site;
+        this.parent = parent;
+        this.userCreation = userCreation;
+        this.creationDate = creationDate;
+        this.userModification = userModification;
+        this.modificationDate = modificationDate;
+        this.page = page;
+        this.clase = clase;
+        this.actionType = actionType;
+        this.labels = labels;
+        this.components = components;
     }
 
     public Action(String idP, String tittleP, String siteP, String parentP, String userCrtP, String creationDateP, String modDatP, String userModP, int typeAction) {
@@ -92,6 +109,13 @@ public class Action {
         this.modificationDate = modDatP;
         this.userModification = userModP;
         this.actionType = typeAction;
+    }
+
+    public void addComponent(Component component) {
+        if (components == null) {
+            components = new ArrayList<>();
+        }
+        components.add(component);
     }
 
     public String getId() {
@@ -190,12 +214,12 @@ public class Action {
         this.actionType = actionType;
     }
 
-    public Component getComponent() {
-        return component;
+    public ArrayList<Component> getComponents() {
+        return components;
     }
 
-    public void setComponent(Component component) {
-        this.component = component;
+    public void setComponents(ArrayList<Component> components) {
+        this.components = components;
     }
 
     @Override
@@ -212,10 +236,8 @@ public class Action {
                 ", page='" + page + '\'' +
                 ", clase='" + clase + '\'' +
                 ", actionType=" + actionType +
-                ", component=" + component +
+                ", labels=" + labels +
+                ", components=" + components +
                 '}';
     }
-
-
-
 }
