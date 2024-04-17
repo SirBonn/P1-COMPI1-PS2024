@@ -17,6 +17,9 @@ import java.util.ArrayList;
 public class Connection extends Thread {
 
     private JTextArea inputTextArea;
+    private String response = "";
+
+
 
     public Connection(JTextArea inputTextArea) {
         this.inputTextArea = inputTextArea;
@@ -49,16 +52,18 @@ public class Connection extends Thread {
                     StringReader sr = new StringReader(receivedMessage);
                     Lexer lex = new Lexer(sr);
                     Parser sintax = new Parser(lex);
-                    /*Query query = (Query) */
                     sintax.parse();
-                    String response = getResponse(sintax.getActions(), sintax.getErrors());
-                    outputStream.writeInt(response.length());
-                    if (sintax.isRight()) {
-                        new ActionManager(sintax.getActions(), response).executeActions();
-                    }
-                    // Enviar la cadena como bytes
-                    outputStream.writeBytes(response);
 
+                    this.response = "";
+                    if (sintax.isRight()) {
+                        ActionManager actmng = new ActionManager(sintax.getActions());
+                        actmng.executeActions();
+                        response += actmng.getResponse();
+                        response += "\n\n" + getResponseOk(sintax.getActions()) + actmng.getResponse();
+                    }
+                    response += "\n\n" + getResponseEr(sintax.getErrors());
+                    outputStream.writeInt(response.length());
+                    outputStream.writeBytes(response);
                     System.out.println("yup[");
                 } catch (Exception e) {
                     System.out.println("ErrorP: " + e.getMessage());
@@ -76,17 +81,18 @@ public class Connection extends Thread {
 
     }
 
-    public String getResponse(ArrayList<Action> actions, ArrayList<ErrorP> errors) {
+    public String getResponseOk(ArrayList<Action> actions) {
         String Result = "";
-
-
         for (Action action : actions) {
             if (action != null)
-                if(action.getId() == null | action.getId() == ""){
-                    Result += action.getPage() + ": Borrada\n";
-                }
-                Result += action.getId() + ": Registrado\n";
+                Result += action.getId() + ": registered (OK)\n";
         }
+        return Result;
+    }
+
+
+    public String getResponseEr(ArrayList<ErrorP> errors) {
+        String Result = "";
 
         Result += "Errors: \n";
         for (ErrorP error : errors) {

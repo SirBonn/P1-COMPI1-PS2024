@@ -7,7 +7,14 @@ public class VideoComponent extends Component{
     private int width;
 
     public VideoComponent(int type, String src, String height, String width) {
-        super("", "", type);
+        super( type);
+        this.src = src;
+        this.height = Integer.parseInt(height);
+        this.width = Integer.parseInt(width);
+    }
+
+    public VideoComponent(String idComp, String pageComp, int type, String src, String height, String width) {
+        super(idComp, pageComp, type);
         this.src = src;
         this.height = Integer.parseInt(height);
         this.width = Integer.parseInt(width);

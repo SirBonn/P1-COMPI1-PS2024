@@ -112,17 +112,38 @@ public class Action {
     }
 
     public void addComponent(Component component) {
+
         if (components == null) {
             components = new ArrayList<>();
         }
+
+        for(Component c : components){
+            if(c.getIdComp().equals(component.getIdComp())){
+                components.remove(c);
+                break;
+            }
+        }
+
         components.add(component);
     }
+
+    public Component getComponent(String idComp){
+        for(Component c : components){
+            if(c.getIdComp().equals(idComp)){
+                return c;
+            }
+        }
+        return null;
+    }
+
 
     public String getId() {
         return id;
     }
 
     public ArrayList<Label> getLabels() {
+        if(labels == null)
+            labels = new ArrayList<>();
         return labels;
     }
 
@@ -215,6 +236,9 @@ public class Action {
     }
 
     public ArrayList<Component> getComponents() {
+        if(components == null)
+            components = new ArrayList<>();
+
         return components;
     }
 

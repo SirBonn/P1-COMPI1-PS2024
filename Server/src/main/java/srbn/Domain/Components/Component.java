@@ -3,12 +3,18 @@ package srbn.Domain.Components;
 public class Component {
 
     private String idComp;
-    private String page;
+    private String pageComp;
     private int type;
 
-    public Component(String idComp, String page, int type) {
+    public Component(String idComp, String pageComp, int type) {
         this.idComp = idComp;
-        this.page = page;
+        this.pageComp = pageComp;
+        this.type = type;
+    }
+
+    public Component(int type) {
+        this.idComp = "";
+        this.pageComp = "";
         this.type = type;
     }
 
@@ -20,12 +26,12 @@ public class Component {
         this.idComp = idComp;
     }
 
-    public String getPage() {
-        return page;
+    public String getPageComp() {
+        return pageComp;
     }
 
-    public void setPage(String page) {
-        this.page = page;
+    public void setPageComp(String pageComp) {
+        this.pageComp = pageComp;
     }
 
     public int getType() {
@@ -40,7 +46,7 @@ public class Component {
     public String toString() {
         return "Component{" +
                 "id='" + idComp + '\'' +
-                ", page='" + page + '\'' +
+                ", page='" + pageComp + '\'' +
                 ", type=" + type +
                 '}';
     }

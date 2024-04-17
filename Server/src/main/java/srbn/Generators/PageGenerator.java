@@ -1,6 +1,7 @@
 package srbn.Generators;
 
 import srbn.Domain.Action;
+import srbn.Domain.Components.Component;
 import srbn.Domain.ErrorE;
 import srbn.Domain.Label;
 import srbn.Managment.Folders.DocumentManager;
@@ -33,10 +34,13 @@ public class PageGenerator {
         this.creationDate = newPage.getCreationDate();
         this.userModification = newPage.getUserModification();
         this.modificationDate = newPage.getModificationDate();
+
         this.labelsValues = new ArrayList<>();
+
         for (Label lbl : newPage.getLabels()) {
             labelsValues.add(lbl.getValue());
         }
+
         this.PATH = newPage.getId() + ".html";
     }
 
@@ -60,8 +64,15 @@ public class PageGenerator {
         site.append("        <h1>Nueva pagina creada desde aplicacion cliente</h1>\n");
         site.append("        <h3>Sitio al que pertenece: ").append(siteId).append("</h3>\n");
         site.append("        <h3>Pagina de la que deriva (padre): ").append(partentPage).append("</h3>\n");
+//        site.append("    </div>\n");
+//        for (Label lbl : newPage.getLabels()) {
+//            site.append(new CompGenerator().generateComponent(comp)); todo generate labels html
+//        }
+//        site.append("    <div>\n");
         site.append("    </div>\n");
-        site.append(new CompGenerator().generateComponents(newPage.getComponents()));
+        for (Component comp : newPage.getComponents()) {
+            site.append(new CompGenerator().generateComponent(comp));
+        }
         site.append("    <div>\n");
         site.append("       <footer>\n");
         site.append("           <p>© Organizacion de lenguajes y compiladores 2024</p><p>Todos los derechos reservados.</p>\n");

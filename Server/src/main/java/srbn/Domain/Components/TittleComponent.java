@@ -8,7 +8,14 @@ public class TittleComponent extends Component {
     private int justify;
 
     public TittleComponent(int type, String text, String color, String align) {
-        super("", "", type);
+        super(type);
+        this.text = text;
+        this.color = color;
+        this.justify = setJustify(align);
+    }
+
+    public TittleComponent(String idComp, String pageComp, int type, String text, String color, String align) {
+        super(idComp, pageComp, type);
         this.text = text;
         this.color = color;
         this.justify = setJustify(align);

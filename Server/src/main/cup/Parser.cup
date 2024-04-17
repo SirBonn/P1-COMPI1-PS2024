@@ -228,7 +228,7 @@ addCompActDef::=    ADD_COMPONENT DBLEQUOTES MAYORQ
                     PARAM NAME CLASSTYPE DBLEQUOTES MAYORQ
                     classParamDef:comp                                              {:
                                                                                         comp.setIdComp(id_value.toString());
-                                                                                        comp.setPage(page_value.toString());
+                                                                                        comp.setPageComp(page_value.toString());
                                                                                         Action act = new Action(id_value,
                                                                                             page_value, comp, getTypeAction("ADD_COMPONENT"));
                                                                                         RESULT = act;
@@ -243,9 +243,9 @@ modifyCompActDef::= MODIFY_COMPONENT:actionType DBLEQUOTES MAYORQ
                     classParamDef:comp                                              {:
 
                                                                                         comp.setIdComp(id_value.toString());
-                                                                                        comp.setPage(page_value.toString());
+                                                                                        comp.setPageComp(page_value.toString());
                                                                                         Action act = new Action(id_value,
-                                                                                            page_value, comp, getTypeAction(actionType.toString()));
+                                                                                            page_value, comp, getTypeAction("MODIFY_COMPONENT"));
                                                                                         RESULT = act;
                                                                                     :}
                 ;

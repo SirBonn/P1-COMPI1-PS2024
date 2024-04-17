@@ -7,7 +7,14 @@ public class ParagraphComponent extends Component{
     private String color;
 
     public ParagraphComponent(int type, String text, String align, String color) {
-        super("", "", type);
+        super(type);
+        this.text = text;
+        this.justify = setJustify(align);
+        this.color = color;
+    }
+
+    public ParagraphComponent(String idComp, String pageComp, int type, String text, String align, String color) {
+        super(idComp, pageComp, type);
         this.text = text;
         this.justify = setJustify(align);
         this.color = color;

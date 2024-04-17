@@ -8,7 +8,15 @@ public class ImageComponent extends Component{
     private int justify;
 
     public ImageComponent (int type, String src, String height, String width, String justify) {
-        super("", "", type);
+        super(type);
+        this.src = src;
+        this.height = Integer.parseInt(height);
+        this.width = Integer.parseInt(width);
+        this.justify = setJustify(justify);
+    }
+
+    public ImageComponent(String idComp, String pageComp, int type, String src, String height, String width, String justify) {
+        super(idComp, pageComp, type);
         this.src = src;
         this.height = Integer.parseInt(height);
         this.width = Integer.parseInt(width);

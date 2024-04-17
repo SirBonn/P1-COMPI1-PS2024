@@ -3,10 +3,7 @@ package srbn.Managment.Folders;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import srbn.Domain.Action;
-import srbn.Domain.Components.Component;
-import srbn.Domain.Components.ComponentType;
-import srbn.Domain.Components.ImageComponent;
-import srbn.Domain.Components.TittleComponent;
+import srbn.Domain.Components.*;
 import srbn.Domain.ErrorE;
 import srbn.Domain.Label;
 
@@ -91,7 +88,7 @@ public class DocumentManager {
             for (JsonNode cmpNode : componentsNode) {
 
                 String componentId = cmpNode.get("idComp").asText();
-                componentPage = cmpNode.get("page").asText();
+                componentPage = cmpNode.get("pageComp").asText();
                 int componentType = cmpNode.get("type").asInt();
                 String componentText = "";
                 String componentColor = "";
@@ -120,17 +117,17 @@ public class DocumentManager {
                 }
 
                 if (componentType == ComponentType.IMAGE.ordinal()) {
-                    components.add(new ImageComponent(componentType, componentSrc, componentHeight,
+                    components.add(new ImageComponent(componentId, componentPage, componentType, componentSrc, componentHeight,
                             componentWidth, componentJustify));
                 } else if (componentType == ComponentType.TITTLE.ordinal()) {
-                    components.add(new TittleComponent(componentType, componentText, componentColor,
+                    components.add(new TittleComponent(componentId, componentPage, componentType, componentText, componentColor,
                             componentJustify));
                 } else if (componentType == ComponentType.VIDEO.ordinal()) {
-                    components.add(new ImageComponent(componentType, componentSrc, componentHeight,
-                            componentWidth, componentJustify));
+                    components.add(new VideoComponent(componentId, componentPage, componentType, componentSrc, componentHeight,
+                            componentWidth));
                 } else if (componentType == ComponentType.PARAGRAPH.ordinal()) {
-                    components.add(new ImageComponent(componentType, componentSrc, componentHeight,
-                            componentWidth, componentJustify));
+                    components.add(new ParagraphComponent(componentId, componentPage, componentType, componentText,
+                            componentJustify, componentColor));
                 } else if (componentType == ComponentType.MENU.ordinal()) {
 //                    components.add(new MenuComponent())
                 }

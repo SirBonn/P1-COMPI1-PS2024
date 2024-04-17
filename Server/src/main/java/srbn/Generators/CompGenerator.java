@@ -41,6 +41,12 @@ public class CompGenerator {
 
     }
 
+    public String generateComponent(Component comp) {
+        this.comp = compIdentifier(comp);
+        generate();
+        return html.toString();
+    }
+
     public Component compIdentifier(Component comp) {
         this.id = comp.getIdComp();
         if (comp.getType() == ComponentType.IMAGE.ordinal()) {
@@ -124,8 +130,8 @@ public class CompGenerator {
 
     private void generateImage() {
         html.append("   <div id=\"").append(id).append("\">\n");
-        html.append("       <img src=\"").append(src).append("\"");
-        html.append("style=\"display: block;");
+        html.append("       <img src=").append(src);
+        html.append(" style=\"display: block;");
         html.append("width: ").append(width).append("px; height: ").append(height).append("px;\">\n");
         html.append("   </div>\n");
     }
