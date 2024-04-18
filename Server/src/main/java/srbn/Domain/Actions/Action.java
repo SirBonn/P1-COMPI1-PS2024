@@ -1,6 +1,7 @@
-package srbn.Domain;
+package srbn.Domain.Actions;
 
 import srbn.Domain.Components.Component;
+import srbn.Domain.Label;
 
 import java.util.ArrayList;
 

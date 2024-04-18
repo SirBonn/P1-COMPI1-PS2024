@@ -1,7 +1,7 @@
 package srbn.Generators;
 
-import srbn.Domain.Action;
-import srbn.Domain.ErrorE;
+import srbn.Domain.Actions.Action;
+import srbn.Domain.Errors.ErrorE;
 import srbn.Managment.Folders.DocumentManager;
 import srbn.Managment.Folders.FolderManagment;
 
@@ -10,12 +10,13 @@ public class SiteGenerator {
 
     private Action newSite;
     private String idSite;
-
     private String userCreator;
     private String creationDate;
     private String userModification;
     private String modificationDate;
     private String PATH;
+    private String completePath;
+    private String URL;
 
     public SiteGenerator(Action newSite) {
         this.newSite = newSite;
@@ -27,12 +28,17 @@ public class SiteGenerator {
         this.PATH = newSite.getId() + ".html";
     }
 
-    public void generate() throws ErrorE {
+    public boolean generate() throws ErrorE {
 
-        DocumentManager.writeJSONobject(newSite);
-        this.PATH = FolderManagment.createSiteFolder(newSite) + "/" + newSite.getId() + ".html";
-        DocumentManager.writeHTMLToFile(setupHtml().toString(), PATH);
+        try {
+            DocumentManager.writeJSONobject(newSite);
+            this.PATH = FolderManagment.createSiteFolder(newSite) + "/index.html";
+            this.completePath = DocumentManager.writeHTMLToFile(setupHtml().toString(), PATH);
+            return true;
 
+        } catch (ErrorE e) {
+            throw new ErrorE("Error generating site: " + e.getMessage());
+        }
     }
 
     private StringBuilder setupHtml() {
@@ -57,6 +63,20 @@ public class SiteGenerator {
         site.append("</body>\n");
         site.append("</html>\n");
         return site;
+    }
+
+    public StringBuilder getSiteConfSv() {
+        StringBuilder conf = new StringBuilder("");
+
+        conf.append("<VirtualHost *:80>\n");
+        conf.append("    DocumentRoot ").append("C:\\xampp\\htdocs").append(idSite).append("\n");
+        conf.append("    ServerName www.").append(idSite.toLowerCase()).append(".com\n");
+        conf.append("    ServerAlias ").append(idSite.toLowerCase()).append(".com\n");
+        conf.append("    ErrorLog \"logs/").append(idSite.toLowerCase()).append("-error.log\"\n");
+        conf.append("    CustomLog \"logs/").append(idSite.toLowerCase()).append("-access.log\" common\n");
+        conf.append("</VirtualHost>\n");
+
+        return conf;
     }
 
     public String getIdSite() {

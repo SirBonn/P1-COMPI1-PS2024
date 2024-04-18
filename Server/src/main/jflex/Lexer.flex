@@ -2,9 +2,8 @@ package srbn.Lexer;
 
 import srbn.Parser.ParserSym;
 import java.util.ArrayList;
-import srbn.Domain.ErrorP;
+import srbn.Domain.Errors.ErrorP;
 import java_cup.runtime.*;
-import java.io.*;
 
 %%
 

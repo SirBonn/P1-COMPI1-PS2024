@@ -1,4 +1,4 @@
-package srbn.Domain;
+package srbn.Domain.Errors;
 
 import java.util.ArrayList;
 

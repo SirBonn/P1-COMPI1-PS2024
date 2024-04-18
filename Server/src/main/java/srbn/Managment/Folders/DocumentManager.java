@@ -2,10 +2,11 @@ package srbn.Managment.Folders;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import srbn.Domain.Action;
+import srbn.Domain.Actions.Action;
 import srbn.Domain.Components.*;
-import srbn.Domain.ErrorE;
+import srbn.Domain.Errors.ErrorE;
 import srbn.Domain.Label;
+import srbn.Managment.ServerToServer.TaskManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,15 +18,15 @@ public class DocumentManager {
 
     public static String writeHTMLToFile(String htmlContent, String filePath) throws ErrorE {
         String response = "";
+        File file = new File(filePath);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filePath)))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(htmlContent);
-            System.out.println("Archivo HTML generado correctamente en: " + filePath);
             response = "Archivo HTML generado correctamente en: " + filePath;
         } catch (IOException e) {
             throw new ErrorE("Error al generar el archivo HTML: " + e.getMessage());
         }
-        return response;
+        return file.getAbsolutePath();
     }
 
     public static String writeJSONobject(Action action) throws ErrorE {
@@ -45,6 +46,17 @@ public class DocumentManager {
         }
 
         return response;
+    }
+
+    public static void writeDomains(TaskManager taskManager) throws ErrorE {
+        try {
+            deleteFile(FolderManagment.APACHE_SV_FOLD + "/domains.json");
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(new File(FolderManagment.APACHE_SV_FOLD + "/domains.json"), taskManager.getDomainsOcuped());
+            System.out.println("JSON escrito exitosamente en el archivo output.json");
+        } catch (IOException e) {
+            throw new ErrorE("Error al generar el archivo JSON: " + e.getMessage());
+        }
     }
 
     public Action getJsonObject(Action act) throws ErrorE {
@@ -144,6 +156,9 @@ public class DocumentManager {
 
     public static boolean deleteFile(String path) {
         File file = new File(path);
+        if (!file.exists()) {
+            return false;
+        }
         return file.delete();
     }
 

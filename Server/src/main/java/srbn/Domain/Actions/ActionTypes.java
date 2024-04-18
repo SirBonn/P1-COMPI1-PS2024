@@ -1,4 +1,4 @@
-package srbn.Domain;
+package srbn.Domain.Actions;
 
 public enum ActionTypes {
 

@@ -1,8 +1,8 @@
 package srbn.Managment;
 
-import srbn.Domain.Action;
-import srbn.Domain.ActionManager;
-import srbn.Domain.ErrorP;
+import srbn.Domain.Actions.Action;
+import srbn.Domain.Actions.ActionManager;
+import srbn.Domain.Errors.ErrorP;
 import srbn.Lexer.Lexer;
 import srbn.Parser.Parser;
 
@@ -30,7 +30,7 @@ public class Connection extends Thread {
 
         DataInputStream inputStream;
         DataOutputStream outputStream;
-        int PORT = 80;
+        int PORT = 81;
 
         try {
             ServerSocket server = new ServerSocket(PORT);

@@ -1,8 +1,8 @@
 package srbn.Generators;
 
-import srbn.Domain.Action;
+import srbn.Domain.Actions.Action;
 import srbn.Domain.Components.Component;
-import srbn.Domain.ErrorE;
+import srbn.Domain.Errors.ErrorE;
 import srbn.Domain.Label;
 import srbn.Managment.Folders.DocumentManager;
 import srbn.Managment.Folders.FolderManagment;
@@ -23,6 +23,7 @@ public class PageGenerator {
     private String modificationDate;
     private ArrayList<String> labelsValues;
     private String PATH;
+    private String completePath;
 
     public PageGenerator(Action newPage) {
         this.newPage = newPage;
@@ -44,11 +45,19 @@ public class PageGenerator {
         this.PATH = newPage.getId() + ".html";
     }
 
-    public void generate() throws ErrorE {
+    public boolean generate() throws ErrorE {
 
-        DocumentManager.writeJSONobject(newPage);
-        this.PATH = FolderManagment.createSiteFolder(newPage) + "/" + newPage.getId() + ".html";
-        DocumentManager.writeHTMLToFile(setupHtml().toString(), PATH);
+
+        try {
+            DocumentManager.writeJSONobject(newPage);
+            this.PATH = FolderManagment.createSiteFolder(newPage) + "/index.html";
+            this.completePath = DocumentManager.writeHTMLToFile(setupHtml().toString(), PATH);
+
+            return true;
+
+        } catch (ErrorE e) {
+            throw new ErrorE("Error generating site: " + e.getMessage());
+        }
 
     }
 
@@ -84,6 +93,21 @@ public class PageGenerator {
         site.append("</html>\n");
         return site;
     }
+
+    public StringBuilder getPageConfigSv(){
+        StringBuilder conf = new StringBuilder("");
+
+        conf.append("<VirtualHost *:80>\n");
+        conf.append("    DocumentRoot ").append("C:\\xampp\\htdocs").append(siteId).append(".").append(pageId).append("\n");
+        conf.append("    ServerName www.").append(siteId.toLowerCase()).append(".").append(pageId.toLowerCase()).append(".com\n");
+        conf.append("    ServerAlias ").append(siteId.toLowerCase()).append(".").append(pageId.toLowerCase()).append(".com\n");
+        conf.append("    ErrorLog \"logs/").append(siteId.toLowerCase()).append("-error.log\"\n");
+        conf.append("    CustomLog \"logs/").append(siteId.toLowerCase()).append("-access.log\" common\n");
+        conf.append("</VirtualHost>\n");
+
+        return conf;
+    }
+
 
     public String getPageId() {
         return pageId;
