@@ -21,7 +21,7 @@ public class ServerConnection {
         try {
             this.outputTextArea.setText("");
 
-            Socket socket = new Socket("127.0.0.1", 80);
+            Socket socket = new Socket("127.0.0.1", 81);
             ClientConnectionManager sm = new ClientConnectionManager(socket.getInputStream(), socket.getOutputStream());
 
             sm.sendString(this.console.getText());
