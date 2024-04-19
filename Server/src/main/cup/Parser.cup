@@ -4,6 +4,10 @@ import java_cup.runtime.*;
 import srbn.Domain.*;
 
 import java.util.ArrayList;
+import srbn.Domain.Actions.*;
+import srbn.Domain.Errors.*;
+import srbn.Domain.Queries.*;
+import srbn.Domain.*;
 import srbn.Domain.Components.*;
 
 class Parser;
@@ -12,6 +16,7 @@ parser code{:
 
     private ArrayList<ErrorP> errors = new ArrayList<>();
     private ArrayList<Action> actions = new ArrayList<>();
+    private ArrayList<Query> queries = new ArrayList<>();
 
     public void syntax_error(Symbol token) {
         if (token.sym != ParserSym.EOF){
@@ -46,8 +51,16 @@ parser code{:
         actions.add(act);
     }
 
+    public void addQuery(Query query){
+        queries.add(query);
+    }
+
     public ArrayList<Action> getActions(){
         return actions;
+    }
+
+    public ArrayList<Query> getQueries(){
+        return queries;
     }
 
     public ArrayList<ErrorP> getErrors(){
@@ -70,6 +83,8 @@ parser code{:
                     return ComponentType.VIDEO.ordinal();
                 case "MENU":
                     return ComponentType.MENU.ordinal();
+                case "ALL":
+                    return ComponentType.ALL.ordinal();
                 default:
                     return 99;
             }
@@ -92,6 +107,8 @@ parser code{:
                     return ActionTypes.ADD_COMPONENT.ordinal();
                 case "MODIFY_COMPONENT":
                     return ActionTypes.MODIFY_COMPONENT.ordinal();
+                case "DELETE_COMPONENT":
+                    return ActionTypes.DELETE_COMPONENT.ordinal();
                 default:
                     return 99;
             }
@@ -104,28 +121,32 @@ non terminal String  parentAttribute, sourceAttribute, colorAttribute, textAttri
 non terminal Component   tittleCompDef, paragCompDef, imageCompDef, videoCompDef, menuCompDef, classParamDef;
 
 non terminal Action  newSiteActDef, deleteSiteActDef, newPageActDef, deletePageActDef, modifyPageActDef, addCompActDef,
-                     modifyCompActDef, defActionsDecl, opnActionDecl, actionDecl;
+                     modifyCompActDef, deleteCompActDef, defActionsDecl, opnActionDecl, actionDecl;
 
-non terminal String     alignmentLoc, widthAttribute, heightAttribute, alignmentAttribute;
+non terminal String     alignmentLoc, widthAttribute, heightAttribute, alignmentAttribute, compTypeDecl;
 
-non terminal Label labelDef;
+non terminal Label      labelDef;
 
-non terminal ArrayList<Label> labelDecl, addLabels;
+non terminal ArrayList<Label>   labelDecl, addLabels;
 
-non terminal         xmlWebCreation, defActions, opnActions, clsActions,opnTags, clsTags, tagDef;
+non terminal Query   querysTypeDef, pagesVisitsDef, siteVisitsDef, popularPagesDef, componentDef;
+
+non terminal ArrayList<String>  pathDef;
+
+non terminal         xmlWebCreation, clsTags, querysDecl ;
 
 terminal String      ID_VALUE, TAGID, COLOR_VALUE, DATE_VALUE;
 
 terminal String      NUMBER_VALUE, CENTER_LOC, LEFT_LOC, RIGHT_LOC, JUSTIFY_LOC, HEIGHT, WIDTH;
 
-terminal             CLSQRBRCKT, OPENSQRBRCKT, DBLEQUOTES, MAYORQ,OPENLABELSTAG, OPENACTIONSTAG,
-                     CLOSEACTIONTAG, CLOSEPARAMTAG, CLOSELABELTAG, CLOSEVALUETAG, CLOSELABELSTAG,
-                     ACTION,  PARAM, NAME, OPENPARAMSTAG, OPENATTRIBUTESTAG, ATTRIBUTE, OPENLABELTAG,
-                     CLOSEATTRIBUTESTAG, CLOSEATTRIBUTETAG, openParams, CLOSEPARAMSTAG,CLOSEACTIONSTAG,
+terminal             DBLEQUOTES, MAYORQ,OPENLABELSTAG,
+                     CLOSEACTIONTAG, CLOSEPARAMTAG, CLOSELABELTAG, CLOSELABELSTAG,
+                     ACTION,  PARAM, NAME, OPENPARAMSTAG, OPENATTRIBUTESTAG, ATTRIBUTE, OPENLABELTAG, SEMICOLON,
+                     CLOSEATTRIBUTESTAG, CLOSEATTRIBUTETAG, CLOSEPARAMSTAG,CLOSEACTIONSTAG, DELETE_COMPONENT,
                      NEW_SITE, DELETE_SITE, NEW_PAGE, DELETE_PAGE, MODIFY_PAGE, ADD_COMPONENT, MODIFY_COMPONENT,
                      ID_PARAM, TITTLE, SITE, PAGE, CLASSTYPE, USER_CREATION, DATE_CREATION, USER_MODIFICATION, DATE_MODIFICATION,
-                     PARENT, PARAGRAPH, IMAGE, VIDEO, MENU, TEXT, ALIGNMENT, COLOR, SOURCE,
-                     MINORQ, DIAGONAL, ACTIONS;
+                     PARENT, PARAGRAPH, IMAGE, VIDEO, MENU, TEXT, ALIGNMENT, COLOR, SOURCE, COMMA,
+                     ACTIONS, CONSULT, VISITS_PAGE, VISITS_SITE, POPULAR_PAGES, COMPONENT, ALL;
 
 start with xmlWebCreation;
 
@@ -133,6 +154,7 @@ start with xmlWebCreation;
 
 xmlWebCreation ::=  actionDecl:newAction {: addAction(newAction);:}
                 |   ACTIONS defActionsDecl:actions CLOSEACTIONSTAG {: System.out.println("actions det");:}
+                |   querysDecl:queries {: System.out.println("queries det");:}
                 ;
 
 defActionsDecl::=   actionDecl:newAction {: addAction(newAction);:}
@@ -143,6 +165,60 @@ actionDecl::=       ACTION NAME opnActionDecl:newAction CLOSEACTIONTAG {: RESULT
                 |   error    {::}
                 ;
 
+querysDecl::=       CONSULT querysTypeDef:query SEMICOLON  {: addQuery(query);:}
+                |   querysDecl:_type CONSULT querysTypeDef:query SEMICOLON {: addQuery(query);:}
+                ;
+
+querysTypeDef::=    pagesVisitsDef:pagesVisits      {: RESULT = pagesVisits; :}
+                |   siteVisitsDef:siteVisits        {: RESULT = siteVisits; :}
+                |   popularPagesDef:popularPages    {: RESULT = popularPages; :}
+                |   componentDef:component          {: RESULT = component; :}
+                ;
+
+siteVisitsDef::=   VISITS_SITE pathDef:paths                    {:
+                                                                    Query query = new Query(0, paths);
+                                                                    RESULT = query;
+                                                                :}
+                ;
+
+pagesVisitsDef::=   VISITS_PAGE pathDef:paths                   {:
+                                                                    Query query = new Query(1, paths);
+                                                                    RESULT = query;
+                                                                :}
+                ;
+
+popularPagesDef::=   POPULAR_PAGES pathDef:paths                {:
+                                                                    Query query = new Query(2, paths);
+                                                                    RESULT = query;
+                                                                :}
+                ;
+
+componentDef::=   COMPONENT compTypeDecl:compType pathDef:paths
+                                                                {:
+                                                                    Query query = new Query(3, compType, paths);
+                                                                    RESULT = query;
+                                                                :}
+                ;
+
+pathDef::=        TAGID:id_value                             {:
+                                                                    ArrayList<String> paths = new ArrayList<>();
+                                                                    paths.add(id_value);
+                                                                    RESULT = paths;
+                                                                :}
+                |   pathDef:paths COMMA TAGID:id_value          {:
+                                                                    paths.add(id_value);
+                                                                    RESULT = paths;
+                                                                :}
+                ;
+
+compTypeDecl::=     ALL:compType                             {: RESULT = "0"; :}
+                |   TITTLE:compType                          {: RESULT = "1"; :}
+                |   PARAGRAPH:compType                       {: RESULT = "2"; :}
+                |   IMAGE:compType                           {: RESULT = "3"; :}
+                |   VIDEO:compType                           {: RESULT = "4"; :}
+                |   MENU:compType                            {: RESULT = "5"; :}
+                ;
+
 opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite; System.out.println("new Site act");:}
                 |   deleteSiteActDef:actiondeleteSite {: RESULT = actiondeleteSite; System.out.println("delete site act"); :}
                 |   newPageActDef:actionnewPage {: RESULT = actionnewPage; System.out.println("new Page act"); :}
@@ -150,6 +226,7 @@ opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite; Syste
                 |   modifyPageActDef:actionmodifyPage {: RESULT = actionmodifyPage; System.out.println("mod Page act"); :}
                 |   addCompActDef:actionaddComp {: RESULT = actionaddComp; System.out.println("add comp act");:}
                 |   modifyCompActDef:actionmodifyComp {: RESULT = actionmodifyComp; System.out.println("mod comp act"); :}
+                |   deleteCompActDef:actiondeleteComp {: RESULT = actiondeleteComp; System.out.println("del comp act"); :}
                 |   error:err                           {: :}
                 ;
 
@@ -246,6 +323,17 @@ modifyCompActDef::= MODIFY_COMPONENT:actionType DBLEQUOTES MAYORQ
                                                                                         comp.setPageComp(page_value.toString());
                                                                                         Action act = new Action(id_value,
                                                                                             page_value, comp, getTypeAction("MODIFY_COMPONENT"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                ;
+
+deleteCompActDef::= DELETE_COMPONENT:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:id_value
+                    pageParam:page_value
+                    CLOSEPARAMSTAG                                                  {:
+                                                                                        Action act = new Action(id_value,
+                                                                                            page_value, getTypeAction("DELETE_COMPONENT"));
                                                                                         RESULT = act;
                                                                                     :}
                 ;
