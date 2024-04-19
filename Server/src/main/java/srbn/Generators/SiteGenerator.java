@@ -2,6 +2,7 @@ package srbn.Generators;
 
 import srbn.Domain.Actions.Action;
 import srbn.Domain.Errors.ErrorE;
+import srbn.Domain.Label;
 import srbn.Managment.Folders.DocumentManager;
 import srbn.Managment.Folders.FolderManagment;
 
@@ -52,6 +53,11 @@ public class SiteGenerator {
         site.append("    <div>\n");
         site.append("        <h1>Nuevo sitio web creado desde aplicacion cliente</h1>\n");
         site.append("    </div>\n");
+        site.append("    </div>\n");
+        for (Label lbl : newSite.getLabels()) {
+            site.append("<a href=\"").append(lbl.getValue()).append("\">").append(lbl.getValue()).append("</a>");
+        }
+        site.append("    <div>\n");
         site.append(new CompGenerator().generateComponents(newSite.getComponents()));
         site.append("    <div>\n");
         site.append("       <footer>\n");

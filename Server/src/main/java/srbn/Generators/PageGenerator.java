@@ -73,11 +73,11 @@ public class PageGenerator {
         site.append("        <h1>Nueva pagina creada desde aplicacion cliente</h1>\n");
         site.append("        <h3>Sitio al que pertenece: ").append(siteId).append("</h3>\n");
         site.append("        <h3>Pagina de la que deriva (padre): ").append(partentPage).append("</h3>\n");
-//        site.append("    </div>\n");
-//        for (Label lbl : newPage.getLabels()) {
-//            site.append(new CompGenerator().generateComponent(comp)); todo generate labels html
-//        }
-//        site.append("    <div>\n");
+        site.append("    </div>\n");
+        for (Label lbl : newPage.getLabels()) {
+            site.append("<a href=\"").append(lbl.getValue()).append("\">").append(lbl.getValue()).append("</a>");
+        }
+        site.append("    <div>\n");
         site.append("    </div>\n");
         for (Component comp : newPage.getComponents()) {
             site.append(new CompGenerator().generateComponent(comp));
@@ -97,7 +97,7 @@ public class PageGenerator {
     public StringBuilder getPageConfigSv(){
         StringBuilder conf = new StringBuilder("");
 
-        conf.append("<VirtualHost *:80>\n");
+        conf.append("<VirtualHost *:81>\n");
         conf.append("    DocumentRoot ").append("C:\\xampp\\htdocs").append(siteId).append(".").append(pageId).append("\n");
         conf.append("    ServerName www.").append(siteId.toLowerCase()).append(".").append(pageId.toLowerCase()).append(".com\n");
         conf.append("    ServerAlias ").append(siteId.toLowerCase()).append(".").append(pageId.toLowerCase()).append(".com\n");
@@ -107,6 +107,7 @@ public class PageGenerator {
 
         return conf;
     }
+
 
 
     public String getPageId() {

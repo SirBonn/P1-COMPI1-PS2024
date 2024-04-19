@@ -35,7 +35,7 @@ public class ActionManager {
                 }
 
             }
-            if (act.getActionType() == ActionTypes.DELETE_SITE.ordinal() && taskManager.isDomainOcuped(this.response, act.getId())){
+            if (act.getActionType() == ActionTypes.DELETE_SITE.ordinal() && taskManager.isDomainOcuped(this.response, act.getId())) {
 
                 if (delecteAct(act)) {
                     taskManager.removeDomain(act.getId());
@@ -44,11 +44,11 @@ public class ActionManager {
                 }
 
             }
-            if (act.getActionType() == ActionTypes.NEW_PAGE.ordinal() && !taskManager.isDomainOcuped(this.response, act.getSite()+"."+act.getId())) {
+            if (act.getActionType() == ActionTypes.NEW_PAGE.ordinal() && !taskManager.isDomainOcuped(this.response, act.getSite() + "." + act.getId())) {
                 PageGenerator pageGenerator = new PageGenerator(act);
 
-                if(pageGenerator.generate()){
-                    taskManager.addDomain(act.getSite()+"."+act.getId());
+                if (pageGenerator.generate()) {
+                    taskManager.addDomain(act.getSite() + "." + act.getId());
                     //ServerFileTasks.addHost(act.getSite()+"."+act.getId());
                     //ServerFileTasks.addConfig(pageGenerator.getPageConfigSv());
                     DocumentManager.writeDomains(taskManager);
@@ -70,10 +70,10 @@ public class ActionManager {
                 }
 
             }
-            if (act.getActionType() == ActionTypes.DELETE_PAGE.ordinal() && taskManager.isDomainOcuped(this.response, act.getSite()+"."+act.getId())) {
+            if (act.getActionType() == ActionTypes.DELETE_PAGE.ordinal() && taskManager.isDomainOcuped(this.response, act.getSite() + "." + act.getId())) {
 
                 if (delecteAct(act)) {
-                    taskManager.removeDomain(act.getSite()+"."+act.getId());
+                    taskManager.removeDomain(act.getSite() + "." + act.getId());
                     DocumentManager.writeDomains(taskManager);
                     this.response += "\n" + act.getId() + " deleted successfully (ok)";
                 }
@@ -118,22 +118,26 @@ public class ActionManager {
 
                 new PageGenerator(act).generate();
             }
+            if (act.getActionType() == ActionTypes.DELETE_COMPONENT.ordinal()) {
+
+                Action actDecl = act;
+                act = getJsonObject(act.getTittle());
+
+                for (Component c : act.getComponents()) {
+                    if (c.getIdComp().equals(actDecl.getId())) {
+                        act.getComponents().remove(c);
+                        break;
+                    }
+                }
+
+                if (delecteAct(act)) {
+                    this.response += "\n" + act.getId() + " removed of "+ act.getTittle() +" successfully (ok)";
+                }
+
+                new PageGenerator(act).generate();
+            }
 
         }
-
-    }
-
-//    private Action getJsonObject(Action act) {
-//        try {
-//            act = new DocumentManager().getJsonObject(act);
-//        } catch (ErrorE e) {
-//            this.response += "\n" + act.getId() + " INTERNAL SERVER ERROR (Crical error)\n";
-//        }
-//
-//        return act;
-//    }
-
-    private void generate(){
 
     }
 
@@ -143,7 +147,7 @@ public class ActionManager {
         try {
             act = new DocumentManager().getJsonObject(id);
         } catch (ErrorE e) {
-            this.response += "\n INTERNAL SERVER ERROR, "+ id +".json NOT FOUND (Crical error)\n";
+            this.response += "\n INTERNAL SERVER ERROR, " + id + ".json NOT FOUND (Crical error)\n";
         }
 
         return act;

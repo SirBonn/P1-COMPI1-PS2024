@@ -8,7 +8,8 @@ public enum ActionTypes {
     MODIFY_PAGE(3),
     DELETE_PAGE(4),
     ADD_COMPONENT(5),
-    MODIFY_COMPONENT(6);
+    MODIFY_COMPONENT(6),
+    DELETE_COMPONENT(7);
 
     private final int index;
 

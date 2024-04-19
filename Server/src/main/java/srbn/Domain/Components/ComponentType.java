@@ -6,6 +6,7 @@ public enum ComponentType {
     PARAGRAPH,
     IMAGE,
     VIDEO,
-    MENU
+    MENU,
+    ALL
 
 }
