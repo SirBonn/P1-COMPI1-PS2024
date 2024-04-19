@@ -21,17 +21,7 @@ import java_cup.runtime.*;
 WHITESPCS   = ([\s\t\r\n]+)
 DIGIT       = [0-9]
 
-//ID = ([a-zA-ZÀ-ÿ\u00f1\u00d1|\d|_|-|]+)
-//OPENACTIONTAG = "<accion nombre= \""
-//OPENPARAMTAG = "<parametro nombre= \""
-//OPENLABELTAG = "<etiqueta nombre= \""
-//OPENATTRIBUTETAG = "<atributo nombr = \""
-//OPENVALUETAG = "<valor>"
-
-//OPENCLASSPARAM = "<parametro nombre=\"clase\">"
-
 //openTags
-//OPENACTIONSTAG = "<acciones>"
 OPENLABELSTAG = "<etiquetas>"
 OPENATTRIBUTESTAG = "<atributos>"
 OPENPARAMSTAG = "<parametros>"
@@ -40,7 +30,6 @@ OPENPARAMSTAG = "<parametros>"
 CLOSEACTIONTAG = "</accion>"
 CLOSEPARAMTAG = "</parametro>"
 CLOSELABELTAG = "/>"
-CLOSEVALUETAG = "</valor>"
 CLOSELABELSTAG = "</etiquetas>"
 CLOSEATTRIBUTETAG = "</atributo>"
 CLOSEATTRIBUTESTAG = "</atributos>"
@@ -55,11 +44,9 @@ ID = ("["[^\"\n\r]*"]")
 TAGID = (\"[^\"\n\r]*\")
 DBLEQUOTES  = "\""
 EQUAL       = "="
-MINORQ      = "<"
 MAYORQ      = ">"
-DIAGONAL    = "/"
-CLSQRBRCKT  = "]"
-OPNSQRBRCKT = "["
+COMMA       = ","
+SEMICOLON   = ";"
 DATE        = ("["[0-9]{4}-[0-9]{2}-[0-9]{2}"]")
 HEXCODE     = ("[#"[0-9a-fA-F]{6}"]")
 
@@ -87,33 +74,33 @@ HEXCODE     = ("[#"[0-9a-fA-F]{6}"]")
 %%
 
 //tags
-{CLOSEACTIONTAG}                {return symbol(ParserSym.CLOSEACTIONTAG, yytext());}
-{CLOSEPARAMTAG}                 {return symbol(ParserSym.CLOSEPARAMTAG, yytext());}
-{CLOSELABELTAG}                 {return symbol(ParserSym.CLOSELABELTAG, yytext());}
-{CLOSEVALUETAG}                 {return symbol(ParserSym.CLOSEVALUETAG, yytext());}
-{CLOSELABELSTAG}                {return symbol(ParserSym.CLOSELABELSTAG, yytext());}
-{CLOSEPARAMSTAG}                {return symbol(ParserSym.CLOSEPARAMSTAG, yytext());}
-{CLOSEACTIONSTAG}               {return symbol(ParserSym.CLOSEACTIONSTAG, yytext());}
-//{OPENACTIONTAG}                 {return symbol(ParserSym.OPENACTIONTAG);}
-//{OPENPARAMTAG}                  {return symbol(ParserSym.OPENPARAMTAG);}
-//{OPENATTRIBUTETAG}              {return symbol(ParserSym.OPENATTRIBUTETAG);}
-//{OPENLABELTAG}                  {return symbol(ParserSym.OPENLABELTAG);}
-//{OPENVALUETAG}                  {return symbol(ParserSym.OPENVALUETAG);}
-{OPENLABELSTAG}                 {return symbol(ParserSym.OPENLABELSTAG, yytext());}
-{OPENPARAMSTAG}                 {return symbol(ParserSym.OPENPARAMSTAG, yytext());}
-{CLOSEATTRIBUTESTAG}            {return symbol(ParserSym.CLOSEATTRIBUTESTAG, yytext());}
-{CLOSEATTRIBUTETAG}             {return symbol(ParserSym.CLOSEATTRIBUTETAG, yytext());}
-{OPENATTRIBUTESTAG}             {return symbol(ParserSym.OPENATTRIBUTESTAG, yytext());}
+{CLOSEACTIONTAG}                 {return symbol(ParserSym.CLOSEACTIONTAG, yytext());}
+{CLOSEPARAMTAG}                  {return symbol(ParserSym.CLOSEPARAMTAG, yytext());}
+{CLOSELABELTAG}                  {return symbol(ParserSym.CLOSELABELTAG, yytext());}
+{CLOSELABELSTAG}                 {return symbol(ParserSym.CLOSELABELSTAG, yytext());}
+{CLOSEPARAMSTAG}                 {return symbol(ParserSym.CLOSEPARAMSTAG, yytext());}
+{CLOSEACTIONSTAG}                {return symbol(ParserSym.CLOSEACTIONSTAG, yytext());}
+{OPENLABELSTAG}                  {return symbol(ParserSym.OPENLABELSTAG, yytext());}
+{OPENPARAMSTAG}                  {return symbol(ParserSym.OPENPARAMSTAG, yytext());}
+{CLOSEATTRIBUTESTAG}             {return symbol(ParserSym.CLOSEATTRIBUTESTAG, yytext());}
+{CLOSEATTRIBUTETAG}              {return symbol(ParserSym.CLOSEATTRIBUTETAG, yytext());}
+{OPENATTRIBUTESTAG}              {return symbol(ParserSym.OPENATTRIBUTESTAG, yytext());}
 
 
 //reservadas
-(<acciones>)                      {return symbol(ParserSym.ACTIONS, yytext());}
-(<parametro)                      {return symbol(ParserSym.PARAM, yytext());}
-(nombre=\")                       {return symbol(ParserSym.NAME, yytext());}
-(<etiqueta)                       {return symbol(ParserSym.OPENLABELTAG, yytext());}
-(<atributo)                       {return symbol(ParserSym.ATTRIBUTE, yytext());}
-(<accion)                         {return symbol(ParserSym.ACTION, yytext());}
-
+(<acciones>)                     {return symbol(ParserSym.ACTIONS, yytext());}
+(<parametro)                     {return symbol(ParserSym.PARAM, yytext());}
+(nombre=\")                      {return symbol(ParserSym.NAME, yytext());}
+(<etiqueta)                      {return symbol(ParserSym.OPENLABELTAG, yytext());}
+(<atributo)                      {return symbol(ParserSym.ATTRIBUTE, yytext());}
+(<accion)                        {return symbol(ParserSym.ACTION, yytext());}
+//consultas
+(CONSULTAR)                      {return symbol(ParserSym.CONSULT, yytext());}
+(VISITAS_PAGINA)                 {return symbol(ParserSym.VISITS_PAGE, yytext());}
+(VISITAS_SITIO)                  {return symbol(ParserSym.VISITS_SITE, yytext());}
+(PAGINAS_POPULARES)              {return symbol(ParserSym.POPULAR_PAGES, yytext());}
+(COMPONENTE)                     {return symbol(ParserSym.COMPONENT, yytext());}
+(TODO)                           {return symbol(ParserSym.ALL, yytext());}
 //tipos de acciones
 (NUEVO_SITIO_WEB)                {return symbol(ParserSym.NEW_SITE, yytext());}
 (BORRAR_SITIO_WEB)               {return symbol(ParserSym.DELETE_SITE, yytext());}
@@ -122,9 +109,10 @@ HEXCODE     = ("[#"[0-9a-fA-F]{6}"]")
 (MODIFICAR_PAGINA)               {return symbol(ParserSym.MODIFY_PAGE, yytext());}
 (AGREGAR_COMPONENTE)             {return symbol(ParserSym.ADD_COMPONENT, yytext());}
 (MODIFICAR_COMPONENTE)           {return symbol(ParserSym.MODIFY_COMPONENT, yytext());}
+(BORRAR_COMPONENTE)              {return symbol(ParserSym.DELETE_COMPONENT, yytext());}
 //tipos de paramteros
 (ID)                             {return symbol(ParserSym.ID_PARAM, yytext());}
-{TITULOID}                         {return symbol(ParserSym.TITTLE, yytext());}
+{TITULOID}                       {return symbol(ParserSym.TITTLE, yytext());}
 (SITIO)                          {return symbol(ParserSym.SITE, yytext());}
 (PAGINA)                         {return symbol(ParserSym.PAGE, yytext());}
 (CLASE)                          {return symbol(ParserSym.CLASSTYPE, yytext());}
@@ -155,12 +143,9 @@ HEXCODE     = ("[#"[0-9a-fA-F]{6}"]")
 {HEXCODE}                        {return symbol(ParserSym.COLOR_VALUE, yytext());}
 {DATE}                           {return symbol(ParserSym.DATE_VALUE, yytext());}
 {DBLEQUOTES}                     {return symbol(ParserSym.DBLEQUOTES, yytext());}
-//{EQUAL}                          {return symbol(ParserSym.EQUAL, yytext());}
-{MINORQ}                         {return symbol(ParserSym.MINORQ, yytext());}
+{SEMICOLON}                      {return symbol(ParserSym.SEMICOLON, yytext());}
+{COMMA}                          {return symbol(ParserSym.COMMA, yytext());}
 {MAYORQ}                         {return symbol(ParserSym.MAYORQ, yytext());}
-{DIAGONAL}                       {return symbol(ParserSym.DIAGONAL, yytext());}
-{CLSQRBRCKT}                     {return symbol(ParserSym.CLSQRBRCKT, yytext());}
-{OPNSQRBRCKT}                    {return symbol(ParserSym.OPENSQRBRCKT, yytext());}
 {DIGIT}+                         {return symbol(ParserSym.NUMBER_VALUE,yytext());}
 {TAGID}                          {return symbol(ParserSym.TAGID, yytext());}
 {ID}                             {return symbol(ParserSym.ID_VALUE, yytext());}
