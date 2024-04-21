@@ -8,6 +8,7 @@ import srbn.Domain.Actions.*;
 import srbn.Domain.Errors.*;
 import srbn.Domain.*;
 import srbn.Domain.Reports.Query;
+import srbn.Domain.Reports.Control;
 import srbn.Domain.Components.*;
 
 class Parser;
@@ -34,6 +35,10 @@ parser code{:
         return str.replace("[", "").replace("]", "");
     }
 
+     private String removeQuotes(String str){
+            return str.replace("\"", "");
+        }
+
 
     public void addError(Symbol token, String msj) {
         try {
@@ -44,6 +49,19 @@ parser code{:
             errors.add(new ErrorP(token.left, token.right, token.value.toString(), 1, msj, list));
         } catch (Exception e) {
 
+        }
+    }
+
+    public Control craeteControl(String domain){
+
+        String[] parts = domain.split("\\.");
+
+        if (parts.length == 3) {
+            return new Control(parts[0], parts[1], parts[2], 0);
+        } else if (parts.length == 2) {
+            return new Control(parts[0], parts[1], "", 0);
+        } else {
+            return new Control(parts[0], "", "", 0);
         }
     }
 
@@ -131,7 +149,7 @@ non terminal ArrayList<Label>   labelDecl, addLabels;
 
 non terminal Query   querysTypeDef, pagesVisitsDef, siteVisitsDef, popularPagesDef, componentDef;
 
-non terminal ArrayList<String>  pathDef;
+non terminal ArrayList<Control>  pathDef;
 
 non terminal         xmlWebCreation, clsTags, querysDecl ;
 
@@ -195,28 +213,28 @@ popularPagesDef::=   POPULAR_PAGES pathDef:paths                {:
 
 componentDef::=   COMPONENT compTypeDecl:compType pathDef:paths
                                                                 {:
-                                                                    Query query = new Query("GET_COMPONENTS", compType, paths);
+                                                                    Query query = new Query("GET_COMPONENTS", getTypeComp(compType), paths);
                                                                     RESULT = query;
                                                                 :}
                 ;
 
 pathDef::=        TAGID:id_value                             {:
-                                                                    ArrayList<String> paths = new ArrayList<>();
-                                                                    paths.add(id_value);
+                                                                    ArrayList<Control> paths = new ArrayList<>();
+                                                                    paths.add(craeteControl(removeQuotes(id_value)));
                                                                     RESULT = paths;
                                                                 :}
                 |   pathDef:paths COMMA TAGID:id_value          {:
-                                                                    paths.add(id_value);
+                                                                    paths.add(craeteControl(removeQuotes(id_value)));
                                                                     RESULT = paths;
                                                                 :}
                 ;
 
-compTypeDecl::=     ALL:compType                             {: RESULT = "0"; :}
-                |   TITTLE:compType                          {: RESULT = "1"; :}
-                |   PARAGRAPH:compType                       {: RESULT = "2"; :}
-                |   IMAGE:compType                           {: RESULT = "3"; :}
-                |   VIDEO:compType                           {: RESULT = "4"; :}
-                |   MENU:compType                            {: RESULT = "5"; :}
+compTypeDecl::=     ALL:compType                             {: RESULT = "ALL"; :}
+                |   TITTLE:compType                          {: RESULT = "TITTLE"; :}
+                |   PARAGRAPH:compType                       {: RESULT = "PARAGRAPH"; :}
+                |   IMAGE:compType                           {: RESULT = "IMAGE"; :}
+                |   VIDEO:compType                           {: RESULT = "VIDEO"; :}
+                |   MENU:compType                            {: RESULT = "MENU"; :}
                 ;
 
 opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite; System.out.println("new Site act");:}
