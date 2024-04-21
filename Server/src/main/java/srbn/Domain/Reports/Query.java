@@ -6,27 +6,23 @@ public class Query {
 
     private int type;
     private int componentType;
-    private ArrayList<String> paths;
-    private String uniqId;
+    private ArrayList<Control> paths;
+    private Control uniqId;
 
     public Query() {
     }
 
-    public Query(String type, String componentType, ArrayList<String> paths) {
+    public Query(String type, int componentType, ArrayList<Control> controlPath) {
         this.type = setQueryType(type);
-        this.componentType = Integer.parseInt(componentType);
+        this.componentType = componentType;
+        this.uniqId = controlPath.get(0);
+    }
+
+    public Query(String type, ArrayList<Control> paths) {
+        this.type = setQueryType(type);
         this.paths = paths;
     }
 
-    public Query(String type, ArrayList<String> paths) {
-        this.type = setQueryType(type);
-        this.paths = paths;
-    }
-
-    public Query(String type, String uniqId) {
-        this.type = setQueryType(type);
-        this.uniqId = uniqId;
-    }
 
     private int setQueryType(String type) {
 
@@ -63,20 +59,19 @@ public class Query {
         this.componentType = componentType;
     }
 
-    public ArrayList<String> getPaths() {
+    public ArrayList<Control> getPaths() {
         return paths;
     }
 
-    public void setPaths(ArrayList<String> paths) {
+    public void setPaths(ArrayList<Control> paths) {
         this.paths = paths;
     }
 
-    public String getUniqId() {
+    public Control getUniqId() {
         return uniqId;
     }
 
-    public void setUniqId(String uniqId) {
+    public void setUniqId(Control uniqId) {
         this.uniqId = uniqId;
     }
-
 }

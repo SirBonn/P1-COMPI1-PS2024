@@ -37,9 +37,11 @@ public class ConnectionManager {
             ActionManager actmng = new ActionManager(sintax.getActions(), taskManager);
             queryManager.executeQueries(sintax.getQueries());
             actmng.executeActions();
-            response += actmng.getResponse();
+            response += queryManager.getResponse();
             response += "\n\n" + getResponseOk(sintax.getActions()) + actmng.getResponse();
         }
+
+            response += getResponseEr(sintax.getErrors());
 
         return response;
     }
