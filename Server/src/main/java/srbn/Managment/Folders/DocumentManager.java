@@ -53,7 +53,19 @@ public class DocumentManager {
             deleteFile(FolderManagment.APACHE_SV_FOLD + "/domains.json");
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(new File(FolderManagment.APACHE_SV_FOLD + "/domains.json"), taskManager.getDomainsOcuped());
-            System.out.println("JSON escrito exitosamente en el archivo output.json");
+            System.out.println("JSON escrito exitosamente en el archivo domains.json");
+            writeControls(taskManager);
+        } catch (IOException e) {
+            throw new ErrorE("Error al generar el archivo JSON: " + e.getMessage());
+        }
+    }
+
+    public static void writeControls(TaskManager taskManager) throws ErrorE {
+        try {
+            deleteFile(FolderManagment.APACHE_SV_FOLD + "/control.json");
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(new File(FolderManagment.APACHE_SV_FOLD + "/control.json"), taskManager.getControls());
+            System.out.println("JSON escrito exitosamente en el archivo control.json");
         } catch (IOException e) {
             throw new ErrorE("Error al generar el archivo JSON: " + e.getMessage());
         }
