@@ -66,6 +66,7 @@ public class PageGenerator {
         site.append("        <title>").append(tittlePage).append("</title>\n");
         site.append("</head>\n");
         site.append("<body>\n");
+        site.append(HtmlMainGenerator.getScript(siteId, pageId, partentPage));
         site.append("    <div id=\"").append(pageId).append("\">\n");
         site.append("        <h1>").append(pageId).append("</h1>\n");
         site.append("    </div>\n");

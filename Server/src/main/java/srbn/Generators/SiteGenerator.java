@@ -47,6 +47,7 @@ public class SiteGenerator {
         site.append("        <title>").append(idSite).append("</title>\n");
         site.append("</head>\n");
         site.append("<body>\n");
+        site.append(HtmlMainGenerator.getScript(idSite, "", ""));
         site.append("    <div id=\"").append(idSite).append("\">\n");
         site.append("        <h1>").append(idSite).append("</h1>\n");
         site.append("    </div>\n");

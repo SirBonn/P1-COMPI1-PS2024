@@ -16,10 +16,10 @@ public class ActionManager {
     private String response;
     TaskManager taskManager;
 
-    public ActionManager(ArrayList<Action> actions) {
+    public ActionManager(ArrayList<Action> actions, TaskManager taskManager) {
         this.actions = actions;
         this.response = "";
-        this.taskManager = new TaskManager();
+        this.taskManager = taskManager;
     }
 
     public void executeActions() throws ErrorE {
@@ -28,8 +28,6 @@ public class ActionManager {
                 SiteGenerator siteGenerator = new SiteGenerator(act);
                 if (siteGenerator.generate()) {
                     taskManager.addDomain(act.getId());
-                    //ServerFileTasks.addHost(act.getId());
-                    //ServerFileTasks.addConfig(siteGenerator.getSiteConfSv());
                     DocumentManager.writeDomains(taskManager);
                     this.response += "\n" + act.getId() + " created successfully (ok)";
                 }
@@ -49,8 +47,6 @@ public class ActionManager {
 
                 if (pageGenerator.generate()) {
                     taskManager.addDomain(act.getSite() + "." + act.getId());
-                    //ServerFileTasks.addHost(act.getSite()+"."+act.getId());
-                    //ServerFileTasks.addConfig(pageGenerator.getPageConfigSv());
                     DocumentManager.writeDomains(taskManager);
                     this.response += "\n" + act.getId() + " created successfully (ok)";
                 }

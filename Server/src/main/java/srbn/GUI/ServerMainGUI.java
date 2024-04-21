@@ -1,8 +1,9 @@
 
 package srbn.GUI;
 
-import srbn.Managment.Connection;
+import srbn.Managment.ClientConnection;
 import srbn.Managment.Folders.FolderManagment;
+import srbn.Managment.HTMLConnection;
 
 /**
  *
@@ -12,13 +13,16 @@ public class ServerMainGUI extends javax.swing.JFrame {
 
 //    private LineCounter lc;
 
-    Connection serverConnection;
+    ClientConnection serverClientConnection;
+    HTMLConnection htmlConnection;
     FolderManagment folderManagment = new FolderManagment();
 
     public ServerMainGUI() {
         initComponents();
-        serverConnection = new Connection(outputTextArea);
-        serverConnection.start();
+        serverClientConnection = new ClientConnection(outputTextArea);
+        serverClientConnection.start();
+        htmlConnection = new HTMLConnection(outputTextArea);
+        htmlConnection.start();
         folderManagment.setup();
     }
 

@@ -6,8 +6,8 @@ import srbn.Domain.*;
 import java.util.ArrayList;
 import srbn.Domain.Actions.*;
 import srbn.Domain.Errors.*;
-import srbn.Domain.Queries.*;
 import srbn.Domain.*;
+import srbn.Domain.Reports.Query;
 import srbn.Domain.Components.*;
 
 class Parser;
@@ -169,33 +169,33 @@ querysDecl::=       CONSULT querysTypeDef:query SEMICOLON  {: addQuery(query);:}
                 |   querysDecl:_type CONSULT querysTypeDef:query SEMICOLON {: addQuery(query);:}
                 ;
 
-querysTypeDef::=    pagesVisitsDef:pagesVisits      {: RESULT = pagesVisits; :}
-                |   siteVisitsDef:siteVisits        {: RESULT = siteVisits; :}
-                |   popularPagesDef:popularPages    {: RESULT = popularPages; :}
-                |   componentDef:component          {: RESULT = component; :}
+querysTypeDef::=    pagesVisitsDef:pagesVisits                  {: RESULT = pagesVisits; :}
+                |   siteVisitsDef:siteVisits                    {: RESULT = siteVisits; :}
+                |   popularPagesDef:popularPages                {: RESULT = popularPages; :}
+                |   componentDef:component                      {: RESULT = component; :}
                 ;
 
 siteVisitsDef::=   VISITS_SITE pathDef:paths                    {:
-                                                                    Query query = new Query(0, paths);
+                                                                    Query query = new Query("GET_VISITS_PAGE", paths);
                                                                     RESULT = query;
                                                                 :}
                 ;
 
 pagesVisitsDef::=   VISITS_PAGE pathDef:paths                   {:
-                                                                    Query query = new Query(1, paths);
+                                                                    Query query = new Query("GET_VISITS_SITE", paths);
                                                                     RESULT = query;
                                                                 :}
                 ;
 
 popularPagesDef::=   POPULAR_PAGES pathDef:paths                {:
-                                                                    Query query = new Query(2, paths);
+                                                                    Query query = new Query("GET_POPULAR_PAGES", paths);
                                                                     RESULT = query;
                                                                 :}
                 ;
 
 componentDef::=   COMPONENT compTypeDecl:compType pathDef:paths
                                                                 {:
-                                                                    Query query = new Query(3, compType, paths);
+                                                                    Query query = new Query("GET_COMPONENTS", compType, paths);
                                                                     RESULT = query;
                                                                 :}
                 ;
