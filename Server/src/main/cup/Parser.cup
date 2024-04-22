@@ -134,28 +134,25 @@ parser code{:
 :}
 
 non terminal String  parentAttribute, sourceAttribute, colorAttribute, textAttribute, pageParam, modDateParam,
-                     userModParam, createDateParam, userCrtParam, parentParam, siteParam, tittleParam, idParam;
+                     userModParam, createDateParam, userCrtParam, parentParam, siteParam, tittleParam, idParam,
+                     alignmentLoc, widthAttribute, heightAttribute, alignmentAttribute, compTypeDecl;
 
 non terminal Component   tittleCompDef, paragCompDef, imageCompDef, videoCompDef, menuCompDef, classParamDef;
 
 non terminal Action  newSiteActDef, deleteSiteActDef, newPageActDef, deletePageActDef, modifyPageActDef, addCompActDef,
                      modifyCompActDef, deleteCompActDef, defActionsDecl, opnActionDecl, actionDecl;
 
-non terminal String     alignmentLoc, widthAttribute, heightAttribute, alignmentAttribute, compTypeDecl;
-
 non terminal Label      labelDef;
 
 non terminal ArrayList<Label>   labelDecl, addLabels;
 
-non terminal Query   querysTypeDef, pagesVisitsDef, siteVisitsDef, popularPagesDef, componentDef;
-
 non terminal ArrayList<Control>  pathDef;
+
+non terminal Query   querysTypeDef, pagesVisitsDef, siteVisitsDef, popularPagesDef, componentDef;
 
 non terminal         xmlWebCreation, clsTags, querysDecl ;
 
-terminal String      ID_VALUE, TAGID, COLOR_VALUE, DATE_VALUE;
-
-terminal String      NUMBER_VALUE, CENTER_LOC, LEFT_LOC, RIGHT_LOC, JUSTIFY_LOC, HEIGHT, WIDTH;
+terminal String      NUMBER_VALUE, CENTER_LOC, LEFT_LOC, RIGHT_LOC, JUSTIFY_LOC, HEIGHT, WIDTH, ID_VALUE, TAGID, COLOR_VALUE, DATE_VALUE;
 
 terminal             DBLEQUOTES, MAYORQ,OPENLABELSTAG,
                      CLOSEACTIONTAG, CLOSEPARAMTAG, CLOSELABELTAG, CLOSELABELSTAG,
@@ -167,8 +164,6 @@ terminal             DBLEQUOTES, MAYORQ,OPENLABELSTAG,
                      ACTIONS, CONSULT, VISITS_PAGE, VISITS_SITE, POPULAR_PAGES, COMPONENT, ALL;
 
 start with xmlWebCreation;
-
-
 
 xmlWebCreation ::=  actionDecl:newAction {: addAction(newAction);:}
                 |   ACTIONS defActionsDecl:actions CLOSEACTIONSTAG {: System.out.println("actions det");:}
@@ -237,14 +232,14 @@ compTypeDecl::=     ALL:compType                             {: RESULT = "ALL"; 
                 |   MENU:compType                            {: RESULT = "MENU"; :}
                 ;
 
-opnActionDecl::=    newSiteActDef:actionnewSite {: RESULT = actionnewSite; System.out.println("new Site act");:}
-                |   deleteSiteActDef:actiondeleteSite {: RESULT = actiondeleteSite; System.out.println("delete site act"); :}
-                |   newPageActDef:actionnewPage {: RESULT = actionnewPage; System.out.println("new Page act"); :}
-                |   deletePageActDef:actiondeletePage {: RESULT = actiondeletePage; System.out.println("del Page act"); :}
-                |   modifyPageActDef:actionmodifyPage {: RESULT = actionmodifyPage; System.out.println("mod Page act"); :}
-                |   addCompActDef:actionaddComp {: RESULT = actionaddComp; System.out.println("add comp act");:}
-                |   modifyCompActDef:actionmodifyComp {: RESULT = actionmodifyComp; System.out.println("mod comp act"); :}
-                |   deleteCompActDef:actiondeleteComp {: RESULT = actiondeleteComp; System.out.println("del comp act"); :}
+opnActionDecl::=    newSiteActDef:actionnewSite         {: RESULT = actionnewSite; System.out.println("new Site act");:}
+                |   deleteSiteActDef:actiondeleteSite   {: RESULT = actiondeleteSite; System.out.println("delete site act"); :}
+                |   newPageActDef:actionnewPage         {: RESULT = actionnewPage; System.out.println("new Page act"); :}
+                |   deletePageActDef:actiondeletePage   {: RESULT = actiondeletePage; System.out.println("del Page act"); :}
+                |   modifyPageActDef:actionmodifyPage   {: RESULT = actionmodifyPage; System.out.println("mod Page act"); :}
+                |   addCompActDef:actionaddComp         {: RESULT = actionaddComp; System.out.println("add comp act");:}
+                |   modifyCompActDef:actionmodifyComp   {: RESULT = actionmodifyComp; System.out.println("mod comp act"); :}
+                |   deleteCompActDef:actiondeleteComp   {: RESULT = actiondeleteComp; System.out.println("del comp act"); :}
                 |   error:err                           {: :}
                 ;
 
@@ -351,7 +346,6 @@ newPageActDef::=    NEW_PAGE:actionType DBLEQUOTES MAYORQ
                                                                                             tittleP, siteP, "", "", "", "", "", getTypeAction("NEW_PAGE"));
                                                                                         RESULT = act;
                                                                                     :}
-                //without parent, modifydate n usermodificate
                 |   NEW_PAGE:actionType DBLEQUOTES MAYORQ
                     OPENPARAMSTAG
                     idParam:idP

@@ -40,13 +40,16 @@ CENTER_LOC = "[CENTRAR]"
 LEFT_LOC = "[IZQUIERDA]"
 RIGHT_LOC = "[DERECHA]"
 JUSTIFY_LOC = "[JUSTIFICAR]"
+
 ID = ("["[^\"\n\r]*"]")
 TAGID = (\"[^\"\n\r]*\")
+
 DBLEQUOTES  = "\""
 EQUAL       = "="
 MAYORQ      = ">"
 COMMA       = ","
 SEMICOLON   = ";"
+
 DATE        = ("["[0-9]{4}-[0-9]{2}-[0-9]{2}"]")
 HEXCODE     = ("[#"[0-9a-fA-F]{6}"]")
 
