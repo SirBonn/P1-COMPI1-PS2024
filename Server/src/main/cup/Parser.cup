@@ -351,6 +351,30 @@ newPageActDef::=    NEW_PAGE:actionType DBLEQUOTES MAYORQ
                                                                                             tittleP, siteP, "", "", "", "", "", getTypeAction("NEW_PAGE"));
                                                                                         RESULT = act;
                                                                                     :}
+                //without parent, modifydate n usermodificate
+                |   NEW_PAGE:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:idP
+                    tittleParam:tittleP
+                    siteParam:siteP
+                    userCrtParam:userCrtP
+                    createDateParam:creationDateP
+                    CLOSEPARAMSTAG                                                  {:
+                                                                                        Action act = new Action(idP,
+                                                                                            tittleP, siteP, userCrtP, creationDateP, getTypeAction("NEW_PAGE"));
+                                                                                        RESULT = act;
+                                                                                    :}
+                |   NEW_PAGE:actionType DBLEQUOTES MAYORQ
+                    OPENPARAMSTAG
+                    idParam:idP
+                    tittleParam:tittleP
+                    siteParam:siteP
+                    userCrtParam:userCrtP
+                    CLOSEPARAMSTAG                                                  {:
+                                                                                        Action act = new Action(idP,
+                                                                                            tittleP, siteP, userCrtP, "", getTypeAction("NEW_PAGE"));
+                                                                                        RESULT = act;
+                                                                                    :}
                 ;
 
 deletePageActDef::= DELETE_PAGE:actionType DBLEQUOTES MAYORQ
