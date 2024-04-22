@@ -3,8 +3,8 @@ package srbn.Generators;
 import srbn.Domain.Actions.Action;
 import srbn.Domain.Errors.ErrorE;
 import srbn.Domain.Label;
-import srbn.Managment.Folders.DocumentManager;
-import srbn.Managment.Folders.FolderManagment;
+import srbn.Management.Folders.DocumentManager;
+import srbn.Management.Folders.FolderManagment;
 
 public class SiteGenerator {
 

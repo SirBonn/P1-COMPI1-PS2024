@@ -1,4 +1,4 @@
-package srbn.Managment.Folders;
+package srbn.Management.Folders;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import srbn.Domain.Actions.Action;
 import srbn.Domain.Components.*;
 import srbn.Domain.Errors.ErrorE;
 import srbn.Domain.Label;
-import srbn.Managment.ServerToServer.TaskManager;
+import srbn.Management.ServerToServer.TaskManager;
 
 import java.io.BufferedWriter;
 import java.io.File;

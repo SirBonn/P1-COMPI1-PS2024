@@ -4,8 +4,8 @@ import srbn.Domain.Actions.Action;
 import srbn.Domain.Components.Component;
 import srbn.Domain.Errors.ErrorE;
 import srbn.Domain.Label;
-import srbn.Managment.Folders.DocumentManager;
-import srbn.Managment.Folders.FolderManagment;
+import srbn.Management.Folders.DocumentManager;
+import srbn.Management.Folders.FolderManagment;
 
 import java.util.ArrayList;
 

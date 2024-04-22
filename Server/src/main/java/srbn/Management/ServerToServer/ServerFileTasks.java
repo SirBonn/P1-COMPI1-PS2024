@@ -1,4 +1,4 @@
-package srbn.Managment.ServerToServer;
+package srbn.Management.ServerToServer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

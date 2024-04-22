@@ -1,11 +1,11 @@
-package srbn.Managment;
+package srbn.Management;
 
 import srbn.Domain.Actions.Action;
 import srbn.Domain.Actions.ActionManager;
 import srbn.Domain.Errors.ErrorP;
 import srbn.Domain.Reports.QueryManager;
 import srbn.Lexer.Lexer;
-import srbn.Managment.ServerToServer.TaskManager;
+import srbn.Management.ServerToServer.TaskManager;
 import srbn.Parser.Parser;
 
 import java.io.StringReader;

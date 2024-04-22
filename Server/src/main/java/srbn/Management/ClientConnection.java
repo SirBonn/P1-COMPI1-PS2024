@@ -1,6 +1,4 @@
-package srbn.Managment;
-
-import srbn.Managment.ServerToServer.TaskManager;
+package srbn.Management;
 
 import javax.swing.*;
 import java.io.DataInputStream;

@@ -1,9 +1,9 @@
 
 package srbn.GUI;
 
-import srbn.Managment.ClientConnection;
-import srbn.Managment.Folders.FolderManagment;
-import srbn.Managment.HTMLConnection;
+import srbn.Management.ClientConnection;
+import srbn.Management.Folders.FolderManagment;
+import srbn.Management.HTMLConnection;
 
 /**
  *

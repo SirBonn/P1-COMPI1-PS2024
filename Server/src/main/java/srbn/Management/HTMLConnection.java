@@ -1,4 +1,4 @@
-package srbn.Managment;
+package srbn.Management;
 
 import javax.swing.*;
 import java.io.DataOutputStream;

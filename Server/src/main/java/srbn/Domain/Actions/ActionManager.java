@@ -4,9 +4,9 @@ import srbn.Domain.Components.Component;
 import srbn.Domain.Errors.ErrorE;
 import srbn.Generators.PageGenerator;
 import srbn.Generators.SiteGenerator;
-import srbn.Managment.Folders.DocumentManager;
-import srbn.Managment.Folders.FolderManagment;
-import srbn.Managment.ServerToServer.TaskManager;
+import srbn.Management.Folders.DocumentManager;
+import srbn.Management.Folders.FolderManagment;
+import srbn.Management.ServerToServer.TaskManager;
 
 import java.util.ArrayList;
 

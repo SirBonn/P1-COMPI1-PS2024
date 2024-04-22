@@ -2,15 +2,13 @@ package srbn.Domain.Reports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import srbn.Domain.Actions.Action;
-import srbn.Domain.Actions.ActionManager;
 import srbn.Domain.Components.Component;
 import srbn.Domain.Components.ComponentType;
 import srbn.Domain.Errors.ErrorE;
-import srbn.Managment.Folders.DocumentManager;
-import srbn.Managment.Folders.FolderManagment;
-import srbn.Managment.ServerToServer.TaskManager;
+import srbn.Management.Folders.DocumentManager;
+import srbn.Management.Folders.FolderManagment;
+import srbn.Management.ServerToServer.TaskManager;
 
-import javax.print.Doc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

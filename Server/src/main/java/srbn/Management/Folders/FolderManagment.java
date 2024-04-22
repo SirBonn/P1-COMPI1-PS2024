@@ -1,4 +1,4 @@
-package srbn.Managment.Folders;
+package srbn.Management.Folders;
 
 import srbn.Domain.Actions.Action;
 import srbn.Domain.Errors.ErrorE;
