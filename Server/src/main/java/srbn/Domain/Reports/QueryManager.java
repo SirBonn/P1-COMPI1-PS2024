@@ -57,14 +57,14 @@ public class QueryManager {
                 for (Control control : query.getPaths()) {
                     String path = control.getSiteId();
                     for (Control _control : controls) {
-                        if (_control.getSiteId().equals(path)) {
+                        if (_control.getSiteId().equals(path) && _control.getPageId().isEmpty()) {
                             topResult[count] = _control;
                             count++;
                         }
                     }
                 }
 
-                printReport(topResult, "THE NUMBER OF VISITS A PAGES ARE: ", count);
+                printReport(topResult, "THE NUMBER OF VISITS A SITE ARE: ", count);
 
             }
             if (query.getType() == QueryTypes.GET_POPULAR_PAGES.ordinal()) {
