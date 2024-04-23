@@ -586,8 +586,7 @@ menuCompDef::=
                     CLOSEPARAMSTAG
                     OPENATTRIBUTESTAG
                     parentAttribute:parentAttribute
-                    CLOSEATTRIBUTESTAG
-                    clsTags                                                                 {:
+                    CLOSEATTRIBUTESTAG                                                      {:
                                                                                               MenuComponent menuComp = new MenuComponent(parentAttribute,
                                                                                                 getTypeComp("MENU"));
                                                                                               RESULT = menuComp;
