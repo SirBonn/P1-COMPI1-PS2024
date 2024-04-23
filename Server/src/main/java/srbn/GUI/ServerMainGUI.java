@@ -1,4 +1,3 @@
-
 package srbn.GUI;
 
 import srbn.Management.ClientConnection;
@@ -12,15 +11,19 @@ import srbn.Management.HTMLConnection;
 public class ServerMainGUI extends javax.swing.JFrame {
 
 //    private LineCounter lc;
-
     ClientConnection serverClientConnection;
     HTMLConnection htmlConnection;
+    LineNumber ln1, ln2;
     FolderManagment folderManagment = new FolderManagment();
 
     public ServerMainGUI() {
         initComponents();
         serverClientConnection = new ClientConnection(outputTextArea);
         serverClientConnection.start();
+        ln1 = new LineNumber(inputTextArea, 3);
+        ln2 = new LineNumber(outputTextArea, 3);
+        inputScrollPane.setRowHeaderView(ln1);
+        outputScrollPane.setRowHeaderView(ln2);
         htmlConnection = new HTMLConnection(outputTextArea);
         htmlConnection.start();
         folderManagment.setup();
@@ -35,11 +38,11 @@ public class ServerMainGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        inputScrollPane = new javax.swing.JScrollPane();
         inputTextArea = new javax.swing.JTextArea();
         inputLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        outputScrollPane = new javax.swing.JScrollPane();
         outputTextArea = new javax.swing.JTextArea();
         clsConsoleButton = new javax.swing.JButton();
 
@@ -50,7 +53,7 @@ public class ServerMainGUI extends javax.swing.JFrame {
         inputTextArea.setLineWrap(true);
         inputTextArea.setRows(5);
         inputTextArea.setTabSize(4);
-        jScrollPane1.setViewportView(inputTextArea);
+        inputScrollPane.setViewportView(inputTextArea);
 
         inputLabel.setText("Input");
 
@@ -61,7 +64,7 @@ public class ServerMainGUI extends javax.swing.JFrame {
         outputTextArea.setLineWrap(true);
         outputTextArea.setRows(5);
         outputTextArea.setTabSize(4);
-        jScrollPane2.setViewportView(outputTextArea);
+        outputScrollPane.setViewportView(outputTextArea);
 
         clsConsoleButton.setText("Limpiar Consola");
         clsConsoleButton.addActionListener(new java.awt.event.ActionListener() {
@@ -83,8 +86,8 @@ public class ServerMainGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(clsConsoleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 704, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 704, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(outputScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 704, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(inputScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 704, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
@@ -97,13 +100,13 @@ public class ServerMainGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(inputLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(inputScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(clsConsoleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                .addComponent(outputScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -111,17 +114,17 @@ public class ServerMainGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clsConsoleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clsConsoleButtonActionPerformed
-       outputTextArea.setText("");
+        outputTextArea.setText("");
     }//GEN-LAST:event_clsConsoleButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clsConsoleButton;
     private javax.swing.JLabel inputLabel;
+    private javax.swing.JScrollPane inputScrollPane;
     private javax.swing.JTextArea inputTextArea;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane outputScrollPane;
     private javax.swing.JTextArea outputTextArea;
     // End of variables declaration//GEN-END:variables
 }
