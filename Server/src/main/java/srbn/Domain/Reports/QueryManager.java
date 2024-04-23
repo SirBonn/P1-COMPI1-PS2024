@@ -9,6 +9,7 @@ import srbn.Management.Folders.DocumentManager;
 import srbn.Management.Folders.FolderManagment;
 import srbn.Management.ServerToServer.TaskManager;
 
+import javax.print.Doc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class QueryManager {
 
     public void executeQueries(ArrayList<Query> queries) {
 
-        ArrayList<Control> controls = getControls();
+        ArrayList<Control> controls = new DocumentManager().getControls();
         controls.sort((o1, o2) -> o2.getCount() - o1.getCount());
         Control[] topResult = new Control[5];
 
@@ -104,7 +105,7 @@ public class QueryManager {
     }
 
     public void updateControls(String site, String page, String parent) {
-        ArrayList<Control> controls = getControls();
+        ArrayList<Control> controls = new DocumentManager().getControls();
         ObjectMapper mapper = new ObjectMapper();
 
         try {
@@ -125,21 +126,7 @@ public class QueryManager {
         }
     }
 
-    private ArrayList<Control> getControls() {
-        ArrayList<Control> controls = new ArrayList<>();
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            File jsonControl = new File(FolderManagment.APACHE_SV_FOLD + "/control.json");
-            Control[] control = mapper.readValue(jsonControl, Control[].class);
-            controls = new ArrayList<>(Arrays.asList(control));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return controls;
-
-    }
 
     private void printReport(Control[] control, String report, int count) {
         response += report + "\n";
