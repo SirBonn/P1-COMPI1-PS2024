@@ -1,7 +1,9 @@
 package srbn.Management.ServerToServer;
 
 import srbn.Domain.Reports.Control;
+import srbn.Management.Folders.DocumentManager;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 
 public class TaskManager {
@@ -10,8 +12,9 @@ public class TaskManager {
     private ArrayList<Control> controls;
 
     public TaskManager() {
-        domainsOcuped = new ArrayList<>();
-        controls = new ArrayList<>();
+
+        domainsOcuped = new DocumentManager().getDomains();
+        controls = new DocumentManager().getControls();
     }
 
     public void addDomain(String domain) {

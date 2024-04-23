@@ -1,6 +1,7 @@
 package srbn.Generators;
 
 import srbn.Domain.Components.*;
+import srbn.Domain.Reports.Control;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class CompGenerator {
     private String src;
     private String height;
     private String width;
+    private ArrayList<Control> controls;
     private StringBuilder html  ;
     private int type;
 
@@ -78,6 +80,7 @@ public class CompGenerator {
             return comp;
         } else if (comp.getType() == ComponentType.MENU.ordinal()) {
             MenuComponent compM = (MenuComponent) comp;
+            this.controls = compM.getControls();
             return comp;
         } else {
             return comp;
@@ -100,10 +103,6 @@ public class CompGenerator {
         }
 
         return html;
-    }
-
-    private void generateMenu() {
-
     }
 
     private void generateParagraph() {
@@ -134,6 +133,16 @@ public class CompGenerator {
         html.append(" style=\"display: block;");
         html.append("width: ").append(width).append("px; height: ").append(height).append("px;\">\n");
         html.append("   </div>\n");
+    }
+
+    private void generateMenu(){
+        html.append("<div id=\"").append(id).append("\">\n");
+        html.append("   <ul>\n");
+        for (Control control : controls) {
+            html.append("       <li><a href=\"").append(control.getSiteId()).append("\">").append(control.getPageId()).append("</a></li>\n");
+        }
+        html.append("   </ul>\n");
+        html.append("</div>\n");
     }
 
     public String getId() {

@@ -6,6 +6,7 @@ import srbn.Domain.Actions.Action;
 import srbn.Domain.Components.*;
 import srbn.Domain.Errors.ErrorE;
 import srbn.Domain.Label;
+import srbn.Domain.Reports.Control;
 import srbn.Management.ServerToServer.TaskManager;
 
 import java.io.BufferedWriter;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DocumentManager {
 
@@ -50,6 +52,7 @@ public class DocumentManager {
 
     public static void writeDomains(TaskManager taskManager) throws ErrorE {
         try {
+
             deleteFile(FolderManagment.APACHE_SV_FOLD + "/domains.json");
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(new File(FolderManagment.APACHE_SV_FOLD + "/domains.json"), taskManager.getDomainsOcuped());
@@ -76,6 +79,36 @@ public class DocumentManager {
         String filePath = FolderManagment.ACTIONS_FOLD + "/" + act.getPage() + ".json";
         ObjectMapper mapper = new ObjectMapper();
         return getJsonObject(act.getPage());
+    }
+
+    public ArrayList<String> getDomains (){
+        ArrayList<String> domains = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            File jsonControl = new File(FolderManagment.APACHE_SV_FOLD + "/domains.json");
+            String[] domain = mapper.readValue(jsonControl, String[].class);
+            domains = new ArrayList<>(Arrays.asList(domain));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return domains;
+    }
+
+    public ArrayList<Control> getControls() {
+        ArrayList<Control> controls = new ArrayList<>();
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            File jsonControl = new File(FolderManagment.APACHE_SV_FOLD + "/control.json");
+            Control[] control = mapper.readValue(jsonControl, Control[].class);
+            controls = new ArrayList<>(Arrays.asList(control));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return controls;
+
     }
 
     public Action getJsonObject(String fileName) throws ErrorE {
